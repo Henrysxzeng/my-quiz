@@ -99,6 +99,8 @@
             <button class="sync-btn btn-export" onclick="exportData()">📤 导出存档</button>
             <button class="sync-btn btn-import" onclick="document.getElementById('file-input').click()">📥 导入存档</button>
             <input type="file" id="file-input" style="display:none" onchange="uploadProgress(this)">
+			<button class="sync-btn" style="background-color: #27ae60; color: white;" onclick="copyData()" title="复制存档代码">📋 复制存档</button>
+			<button class="sync-btn" style="background-color: #f39c12; color: white;" onclick="importFromText()" title="粘贴存档代码">📝 粘贴导入</button>
         </div>
 
         <select id="mode-select" class="mode-select" onchange="renderHome()">
@@ -329,6 +331,50 @@
         // 显示下一题按钮
         document.getElementById('next-btn').style.display = 'block';
     }
+	// 手机端专用：复制存档代码到剪贴板
+	function copyData() {
+		const allData = { wrongBook, chapterProgress, timestamp: new Date().getTime() };
+		const str = JSON.stringify(allData);
+		
+		// 兼容手机端的复制方法
+		const textArea = document.createElement("textarea");
+		textArea.value = str;
+		textArea.style.position = "fixed";  // 避免屏幕滚动
+		textArea.style.opacity = "0";
+		document.body.appendChild(textArea);
+		textArea.focus();
+		textArea.select();
+		
+		try {
+			document.execCommand('copy');
+			alert("✅ 存档代码已成功复制！\n您可以将其粘贴保存到微信文件传输助手或备忘录中。");
+		} catch (err) {
+			alert("❌ 复制失败，请尝试使用下载功能。");
+		}
+		document.body.removeChild(textArea);
+	}
+
+// 手机端专用：通过粘贴文本导入存档
+	function importFromText() {
+		const str = prompt("请在下方输入框内粘贴您的存档代码：");
+		if (!str) return; // 用户取消或未输入
+		
+		try {
+			const data = JSON.parse(str);
+			if (data.wrongBook && data.chapterProgress) {
+				wrongBook = data.wrongBook;
+				chapterProgress = data.chapterProgress;
+				saveWrongBook();
+				localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
+				alert("🎉 存档导入成功！");
+				location.reload();
+			} else {
+				alert("❌ 导入失败：存档格式不正确，请确保复制了完整的代码。");
+			}
+		} catch(e) {
+			alert("❌ 导入失败：无法解析代码，请检查是否包含多余字符。");
+		}
+	}
 </script>
 </body>
 </html>
