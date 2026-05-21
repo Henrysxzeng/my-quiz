@@ -12478,5 +12478,1215 @@ const allQuestions = [
       "缺陷的状态"
     ],
     "answer": 1
+  },
+   {
+    "id": 1001,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "java.net 包中的 DatagramPacket 类用于封装UDP通信中发送或者接收的数据。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1002,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Java中，DatagramSocket 类中提供了accept()方法，用于接收数据报包。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1003,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "TCP/IP 可以提供异构网络之间的互连。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1004,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "TCP 是一种面向连接的、可靠的传输协议，它使用三次握手来建立连接，并使用数据包确认和重传机制来确保数据的可靠性。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1005,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "死锁的产生有四个必要条件：互斥使用、不可抢占、请求和保持、循环等待。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1006,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "Android 应用程序的每个 Activity 都必须在清单文件 Manifest 中进行注册。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1007,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "Android 项目中 gen 目录是存放生成的代码文件的目录，开发者可以手动编辑这些文件。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1008,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "Android 模拟器的性能和真实设备相比一定是相同的。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1009,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在 Android 应用程序运行时，如果应用被切换到后台，系统会调用活动的 onStop()方法。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1010,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，Activity是一种用于存储和管理数据的组件。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1011,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，通过 setContentView(R.layout.activity_main)方法可以将 Activity 关联的布局文件设置为 activity_main.xml。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1012,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在 Android 系统中，Activity 销毁时执行执行方法是 onDestroy()。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1013,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，当一个 Activity 从后台重新回到前台时，系统会调用 onRestart()方法。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1014,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在 Android中，使用 Intent 传递数据时，被传递的对象需要实现Serializable 接口。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1015,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在 Android中，调用setResult() 方法设置结果数据后，可以直接通过 getIntent().getExtras()获取结果数据。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1016,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，Fragment 可以单独存在，不必依附于一个 Activity。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1017,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，通过 FragmentManager 和 FragmentTransaction 动态添加 Fragment时，事务必须通过 commit()方法提交。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1018,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在 Android中，当Fragment 由不可见变为可见时，系统会调用onStart()方法。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1019,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，可以通过 DatePickerDialog 设置最小和最大日期范围。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1020,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，可以通过 TimePickerDialog 设置最小和最大时间范围。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1021,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，通知可以显示在屏幕的任何位置，不受限制。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1022,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，使用 NotificationManager 的 notify 方法显示notification消息。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1023,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "Android中，BroadcastReceiver 可以中断正在进行的电话通话。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1024,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，通过使用 sendOrderedBroadcast()发送的有序广播，可以修改广播消息的内容。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1025,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，AlarmManager 可以用于替代定时器来执行定时任务。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1026,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，每个应用程序都有一个独立的 SharedPreferences 实例，不与其他应用程序共享。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1027,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，使用 SharedPreferences 的 edit()方法获取的Editor 对象可以执行读操作。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1028,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，应用程序可以直接访问其他应用程序的私有存储空间。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1029,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，应用程序的内部存储空间是公开可读的。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1030,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，应用程序可以直接访问其他应用程序的外部存储空间。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1031,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，SQLite 数据库支持跨进程访问。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1032,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，可以使用 SQLite 数据库的 delete()方法删除表中的所有记录。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1033,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在 Android 应用中创建数据库帮助类时，需要继承 SQLiteOpenHelper类，才能创建和更新数据库。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1034,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "Android 中 ContentProvider 类主要用于从内容提供者处获取和修改数据。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1035,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，通过 Content Provider 删除数据时，可以直接使用Content Resolver 的 delete()方法。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1036,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，通过 Content Provider 插入数据时，可以直接使用Content Resolver 的insert()方法，不需要指定 URI 中的表名。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1037,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中 Service 是能够在后台长时间运行，并且提供用户界面的应用程序组件。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1038,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，如果 Activity与 Service 通过 bindService()方法绑定，当所有绑定的 Activity 都解绑后，Service 会自动销毁。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1039,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，通过 startService() 方法启动的 Service 可以通过bindService()方法进行绑定。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1040,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，通过 startService() 方法启动的 Service 可以通过unbindService()方法解绑。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1041,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，Bound Service 通常只有在它服务于其他应用程序组件时才会存在，并且它不会无限的在后台运行。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1042,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，Handler 主要用于在 UI 线程中处理用户输入事件。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1043,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，Handler的post() 方法可以用于将一个 Runnable对象放入消息队列，并在UI线程中执行。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1044,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，AsyncTask的 onProgressUpdate() 方法用于在执行后台任务过程中更新UI元素。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1045,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在Android中，IntentService 在执行任务时会自动停止，无需手动调用 stopSelf()方法。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1046,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "软件产品部署的目标是确保系统在生产环境中能够稳定运行。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1047,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "软件产品部署的特征之一是“可重复性”，即部署流程可以多次执行而不产生意外结果。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1048,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在“金丝雀发布”策略中，新版本首先部署给大部分用户，以观察其在生产环境中的表现，再逐步缩小部署范围。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1049,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "蓝绿部署是一种将新版本逐步推送给用户，通过逐步扩大部署范围的方式来确保新版本在生产环境中稳定运行的策略。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1050,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "集中式部署模型适用于需要集中管理和控制的场景，但可能受到单点故障的影响。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1051,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "单一职责原则在集中式部署中的设计中通常用于确保每个模块或组件只负责一项功能。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1052,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在集中式部署中，由于所有组件都在一个服务器上，系统的扩展性相对较弱。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1053,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "负载均衡是集中式部署中的关键技术之一，其主要目标是确保系统在某个组件发生故障时能够自动切换到另一个可用的组件，从而保持系统的可用性。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1054,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "分布式部署的主要目标之一是通过将系统的不同模块分布在多个服务器上，提高系统的可用性和性能。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1055,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "接口隔离原则是分布式系统设计中的一项关键设计原则，其主要目标是降低组件之间的耦合度，使得系统更加灵活。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1056,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在分布式系统中，由于组件分布在不同的服务器上，系统的可用性相对较低，因为任何一个服务器的故障都可能导致系统部分不可用。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1057,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "多租户部署是一种常用的策略，用于将多个租户的数据和操作隔离开，以确保系统的安全性和稳定性。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1058,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "远程调试是一种在本地开发环境之外调试远程服务器上的代码的方法。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1059,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "远程调试环境中，网络连接速度不会影响代码的调试和运行效果，因为调试是在本地进行的。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1060,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "主动性远程调试是一种通过在代码中插入断点或日志来收集调试信息的远程调试类型。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1061,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "日志分析是一种远程调试方法，通过在代码中添加日志语句来收集运行时的调试信息，以便后续分析和问题排查。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1062,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "Eclipse IDE 具备开发和调试的高级特性，使其成为一个全面的工具。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1063,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在测试环境中，考虑安全性是一个次要因素，因为测试环境通常不包含真实的用户数据。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1064,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "测试环境的重要性在软件开发过程的初期并不明显，只有在测试阶段才变得关键。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1065,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "进行环境监测是测试环境规划中的一个阶段，主要用于实时监测测试环境的性能和稳定性。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1066,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "通过虚拟机，可以在单个计算机上并发运行多个操作系统。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1067,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "虚拟机的应用主要局限于个人电脑领域，对于企业级服务器等大规模系统并不适用。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1068,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "制定测试计划是测试环境建立过程中的一个重要步骤，可以帮助团队明确测试目标和策略。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1069,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "自动部署测试环境可以提高部署的效率，并降低人为错误的发生。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1070,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "环境备份和还原是测试环境维护过程中确保环境配置和数据不受损失的关键步骤。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1071,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "探索性测试是一种计划不明确、灵活和基于经验的测试方法，测试人员在执行测试时自由探索软件系统。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1072,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "单元测试的目标是验证整个系统的功能是否符合用户需求。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1073,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "集成测试分为自上而下和自下而上两种策略，它们的选择取决于项目的具体需求和特点。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1074,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "验收测试和确认测试是相同的概念，用于确认软件系统是否符合用户需求。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1075,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "Beta 测试是在软件发布前由内部测试团队进行的测试，用于评估软件系统的性能和稳定性。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1076,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "验收测试是由内部测试团队进行的测试，用于评估软件系统的性能和稳定性。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1077,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "回归测试通常在每次代码变更之后都进行，以确保新的代码不会对现有功能造成负面影响。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1078,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "路径覆盖是白盒测试中一种测试方法，用于确保代码中的所有可能执行路径都被覆盖。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1079,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在语句覆盖中，代码行被执行表示该行的所有可能分支也都被执行。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1080,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "判断覆盖是一种黑盒测试方法，主要关注测试软件系统的外部行为和功能。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1081,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "条件覆盖要求测试用例覆盖判断语句的所有可能条件。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1082,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "判定-条件覆盖是一种黑盒测试方法，主要关注测试软件系统的外部行为和功能。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1083,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "条件组合覆盖要求测试用例覆盖判断语句的所有可能条件组合。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1084,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "路径覆盖是一种黑盒测试方法，主要关注测试软件系统的外部行为和功能。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1085,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "基本路径测试法对于复杂的程序可能需要大量的测试用例，因此在实际应用中可能存在一定的计算和管理成本。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1086,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "黑盒测试不考虑程序的源代码，而主要关注系统的输入和输出。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1087,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "等价类划分法只适用于输入值的测试，不适用于输出值的测试。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1088,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "边界值分析法主要用于测试数字输入，对于其他类型的输入并不适用。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1089,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "错误推测法的缺点是难以系统化，并且过度依赖个人能力。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1090,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "因果图法适用于任何规模和类型的系统，无论是传统的瀑布模型还是敏捷开发环境。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1091,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "判定表驱动法可以帮助测试团队设计全面而高效的测试用例。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1092,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "正交试验法适用于排除变量之间的相互影响，以减少测试用例的数量。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1093,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "场景法主要关注系统的内部实现细节。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1094,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在测试方法选择的策略中，项目的预算和时间不是影响选择的重要因素。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1095,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "测试用例的编写是软件测试过程中最后一步，可以在测试执行前随时完成。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1096,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在测试用例设计中，“等价类划分”和“边界值分析”是两种不同的原则，分别关注输入值的分组和边界情况。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1097,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "良好的测试用例应该具备高度的复杂度，以确保尽可能多地覆盖系统的功能。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1098,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "高度依赖其他测试用例的测试用例通常有助于提高系统的稳定性。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1099,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "决策覆盖率和路径覆盖率是两个完全不同的概念，没有交集。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1100,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在测试用例执行过程中，记录执行的详细信息对于后续的缺陷分析和改进非常重要。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1101,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在测试用例维护中，忽略变更并继续执行旧的测试用例是一种推荐的做法，以确保测试的稳定性。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1102,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "手工测试的另一个局限性是无法准确记录测试用例的执行步骤和结果。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1103,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "自动化测试脚本的一个优势是能够适应系统变更，无需人工干预。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1104,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "软件测试自动化不适用于具有短周期、频繁变更和灵活需求的项目。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1105,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "软件测试按照功能划分可以分为静态测试和动态测试。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1106,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "工具的易用性是一个次要的因素，不应该在测试工具选择中考虑。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1107,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "选择功能测试工具时，项目规模和复杂性是不重要的因素。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1108,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "在性能测试中，吞吐量越大表示系统的性能越好，响应时间越短。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 0
+  },
+  {
+    "id": 1109,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "安全性测试工具主要关注系统的性能，而对系统的漏洞检测不敏感。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
+  },
+  {
+    "id": 1110,
+    "chapter": "最终章",
+    "type": "single",
+    "question": "缺陷跟踪系统的主要作用是记录测试用例的执行结果。",
+    "options": [
+      "正确",
+      "错误"
+    ],
+    "answer": 1
   }
 ];
