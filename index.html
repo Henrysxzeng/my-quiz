@@ -5,47 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>计算机三级理论</title>
 <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f5f7fa; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
-    h1 { text-align: center; color: #2c3e50; margin-bottom: 30px;}
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f5f7fa; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; transition: background-color 0.3s, color 0.3s; }
+    h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; position: relative;}
     button { cursor: pointer; }
     
     .view { display: none; }
     .view.active { display: block; }
 
-    .controls { display: flex; gap: 15px; margin-bottom: 20px; justify-content: space-between; flex-wrap: wrap; background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center;}
+    .controls { display: flex; gap: 15px; margin-bottom: 20px; justify-content: space-between; flex-wrap: wrap; background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center; transition: all 0.3s;}
     
     /* 同步操作区 */
-    .sync-actions { display: flex; gap: 10px; width: 100%; justify-content: center; margin-bottom: 10px; padding-bottom: 15px; border-bottom: 1px dashed #ecf0f1; }
+    .sync-actions { display: flex; gap: 10px; width: 100%; justify-content: center; margin-bottom: 10px; padding-bottom: 15px; border-bottom: 1px dashed #ecf0f1; transition: border-color 0.3s;}
     .sync-btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; transition: opacity 0.2s;}
     .sync-btn:hover { opacity: 0.8; }
     .btn-export { background-color: #9b59b6; color: white; }
     .btn-import { background-color: #e67e22; color: white; }
 
-    .mode-select { padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; outline: none; flex-grow: 1; min-width: 150px;}
-    .random-toggle { display: flex; align-items: center; font-size: 15px; user-select: none; background: #f8f9fa; padding: 8px 15px; border-radius: 6px; border: 1px solid #e1e4e8;}
+    .mode-select { padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; outline: none; flex-grow: 1; min-width: 150px; transition: all 0.3s;}
+    .random-toggle { display: flex; align-items: center; font-size: 15px; user-select: none; background: #f8f9fa; padding: 8px 15px; border-radius: 6px; border: 1px solid #e1e4e8; transition: all 0.3s;}
     .random-toggle input { margin-right: 8px; cursor: pointer; width: 16px; height: 16px;}
 
     .chapter-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
     @media (max-width: 500px) { .chapter-grid { grid-template-columns: 1fr; } }
     
-    .chapter-card { background: white; border-radius: 12px; padding: 18px; display: flex; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; border: 1px solid transparent;}
+    .chapter-card { background: white; border-radius: 12px; padding: 18px; display: flex; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, border-color 0.3s; border: 1px solid transparent;}
     .chapter-card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); border-color: #3498db;}
     .chapter-card.all-card { grid-column: 1 / -1; background: #eef7ff; border: 1px dashed #bcdcff;}
     
-    .chapter-icon { width: 45px; height: 45px; border-radius: 50%; background: #ebf5ff; color: #3498db; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 20px; margin-right: 15px; flex-shrink: 0;}
+    .chapter-icon { width: 45px; height: 45px; border-radius: 50%; background: #ebf5ff; color: #3498db; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 20px; margin-right: 15px; flex-shrink: 0; transition: all 0.3s;}
     .chapter-info { flex: 1; }
-    .chapter-title { font-size: 16px; font-weight: bold; margin-bottom: 6px; color: #2c3e50;}
+    .chapter-title { font-size: 16px; font-weight: bold; margin-bottom: 6px; color: #2c3e50; transition: color 0.3s;}
     .chapter-progress { font-size: 13px; color: #7f8c8d; }
-    .progress-bar-bg { width: 100%; height: 6px; background: #ecf0f1; border-radius: 3px; margin-top: 8px; overflow: hidden;}
-    .progress-bar-fill { height: 100%; background: #3498db; border-radius: 3px; transition: width 0.3s;}
+    .progress-bar-bg { width: 100%; height: 6px; background: #ecf0f1; border-radius: 3px; margin-top: 8px; overflow: hidden; transition: background-color 0.3s;}
+    .progress-bar-fill { height: 100%; background: #3498db; border-radius: 3px; transition: width 0.3s, background-color 0.3s;}
 
     .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .back-btn { padding: 8px 15px; background: #fff; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+    .back-btn { padding: 8px 15px; background: #fff; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s;}
     .back-btn:hover { background: #f8f9fa; }
-    .quiz-title { font-size: 18px; font-weight: bold; color: #34495e;}
+    .quiz-title { font-size: 18px; font-weight: bold; color: #34495e; transition: color 0.3s;}
     
-    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-    .tag { display: inline-block; padding: 3px 8px; background: #34495e; color: white; border-radius: 4px; font-size: 12px; margin-bottom: 15px; }
+    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: background-color 0.3s, box-shadow 0.3s;}
+    .tag { display: inline-block; padding: 3px 8px; background: #34495e; color: white; border-radius: 4px; font-size: 12px; margin-bottom: 15px; transition: background-color 0.3s;}
     .question-text { font-size: 18px; margin-bottom: 20px; line-height: 1.6; font-weight: 500;}
     
     .option { display: block; width: 100%; text-align: left; background: #f8f9fa; color: #333; margin-bottom: 12px; padding: 15px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; font-size: 16px;}
@@ -56,12 +56,42 @@
     .status-bar { margin-top: 20px; text-align: center; color: #7f8c8d; font-size: 14px; font-weight: bold;}
     #next-btn { background-color: #2ecc71; width: 100%; margin-top: 20px; padding: 15px; font-size: 18px; border: none; border-radius: 8px; color: white; display: none; box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);}
     #next-btn:hover { background-color: #27ae60; }
+
+    /* 护眼模式切换按钮 */
+    .theme-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 24px; cursor: pointer; transition: opacity 0.3s; padding: 0;}
+    .theme-btn:hover { opacity: 0.7; }
+    
+    /* ======== 🌙 护眼模式 (夜间深色) ======== */
+    body.eye-care { background-color: #181a1b; color: #e1e4e8; }
+    body.eye-care h1 { color: #c8d1d9; }
+    body.eye-care .controls, body.eye-care .card, body.eye-care .chapter-card { background: #24292e; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border-color: #444c56; }
+    body.eye-care .chapter-card.all-card { background: #1f2a36; border: 1px dashed #3a536b; }
+    body.eye-care .chapter-title { color: #e1e4e8; }
+    body.eye-care .chapter-icon { background: #323e4d; color: #6cb6ff; }
+    body.eye-care .progress-bar-bg { background: #3b454e; }
+    body.eye-care .progress-bar-fill { background: #47a3f3; }
+    body.eye-care .mode-select { background: #2f363d; color: #e1e4e8; border-color: #444c56; }
+    body.eye-care .random-toggle { background: #2f363d; border-color: #444c56; color: #e1e4e8; }
+    body.eye-care .quiz-title { color: #c8d1d9; }
+    body.eye-care .back-btn { background: #2f363d; border-color: #444c56; color: #e1e4e8; }
+    body.eye-care .back-btn:hover { background: #444c56; }
+    body.eye-care .option { background: #2f363d; color: #e1e4e8; border-color: transparent; }
+    body.eye-care .option:hover { background: #444c56; }
+    body.eye-care .option.correct { background: #173b22; border-color: #2ea043; color: #7ee787; }
+    body.eye-care .option.wrong { background: #490202; border-color: #f85149; color: #ff7b72; }
+    body.eye-care .tag { background: #444c56; color: #c8d1d9; }
+    body.eye-care .status-bar { color: #8b949e; }
+    body.eye-care .sync-actions { border-bottom: 1px dashed #444c56; }
+    body.eye-care #next-btn { box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
 </style>
 <script src="data.js"></script> 
 </head>
 <body>
 
-<h1>📚 计算机三级理论</h1>
+<h1 style="position: relative;">
+    📚 计算机三级理论
+    <button id="theme-toggle" class="theme-btn" onclick="toggleTheme()" title="切换护眼模式">🌙</button>
+</h1>
 
 <div id="home-view" class="view active">
     <div class="controls">
@@ -111,18 +141,32 @@
 
     // 章节名称映射
     const chapterTitles = { 
-    "第 1 章": "职业道德与基本规范", 
-    "第 2 章": "系统方案与数据库",
-    "最终章": "冲刺模拟（1001-1110）"   // ✅ 加这一行
-};
+        "第 1 章": "职业道德与基本规范", 
+        "第 2 章": "系统方案与数据库",
+        "最终章": "冲刺模拟（1001-1110）"
+    };
 
     window.onload = () => {
+        // 读取本地存储的护眼模式状态
+        if (localStorage.getItem('eyeCareMode') === 'true') {
+            document.body.classList.add('eye-care');
+            document.getElementById('theme-toggle').innerText = '☀️';
+        }
+
         if(typeof allQuestions === 'undefined') {
             document.body.innerHTML = "<h2 style='text-align:center;color:red;margin-top:50px;'>未检测到题库 data.js！</h2>";
             return;
         }
         renderHome();
     };
+
+    // 切换护眼模式
+    function toggleTheme() {
+        document.body.classList.toggle('eye-care');
+        const isDark = document.body.classList.contains('eye-care');
+        localStorage.setItem('eyeCareMode', isDark);
+        document.getElementById('theme-toggle').innerText = isDark ? '☀️' : '🌙';
+    }
 
     function saveWrongBook() { localStorage.setItem('myWrongBook', JSON.stringify(wrongBook)); }
     
@@ -234,8 +278,8 @@
         let html = `<span class="tag">${q.chapter} | 全局第 ${q.id} 题</span><div class="question-text">${currentIndex + 1}. ${q.question}</div>`;
         q.options.forEach((opt, index) => {
             html += `<button class="option" onclick="checkAnswer(${index}, ${q.answer}, ${q.id}, this)">${String.fromCharCode(65 + index)}. ${opt}</button>`;
-		});
-		html += `<button class="option";font-weight:bold;" onclick="dontKnow(${q.answer}, ${q.id})">🤯 不知道 / 直接看答案</button>`;
+        });
+        html += `<button class="option" style="font-weight:bold; text-align:center;" onclick="dontKnow(${q.answer}, ${q.id})">🤯 不知道 / 直接看答案</button>`;
         document.getElementById('question-area').innerHTML = html;
         document.getElementById('status-bar').innerText = `当前进度: ${currentIndex + 1} / ${currentList.length}`;
     }
@@ -266,24 +310,25 @@
         saveProgress();
         loadQuestion();
     }
-	function dontKnow(correctIndex, qId) {
-    if (hasAnswered) return;
-    hasAnswered = true;
+    
+    function dontKnow(correctIndex, qId) {
+        if (hasAnswered) return;
+        hasAnswered = true;
 
-    const options = document.querySelectorAll('.option');
+        const options = document.querySelectorAll('.option');
 
-    // 标记正确答案
-    options[correctIndex].classList.add('correct');
+        // 标记正确答案
+        options[correctIndex].classList.add('correct');
 
-    // 加入错题本（和答错一样处理）
-    if (currentMode === 'normal' && !wrongBook.includes(qId)) {
-        wrongBook.push(qId);
-        saveWrongBook();
+        // 加入错题本（和答错一样处理）
+        if (currentMode === 'normal' && !wrongBook.includes(qId)) {
+            wrongBook.push(qId);
+            saveWrongBook();
+        }
+
+        // 显示下一题按钮
+        document.getElementById('next-btn').style.display = 'block';
     }
-
-    // 显示下一题按钮
-    document.getElementById('next-btn').style.display = 'block';
-}
 </script>
 </body>
 </html>
