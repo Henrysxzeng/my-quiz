@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>极速刷题神器 - 自动跳转版</title>
+<style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f5f7fa; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1 { text-align: center; color: #2c3e50; margin-bottom: 30px;}
+    button { cursor: pointer; }
+    
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .controls { display: flex; gap: 15px; margin-bottom: 20px; justify-content: space-between; flex-wrap: wrap; background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center;}
+    .mode-select { padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; outline: none; flex-grow: 1; min-width: 150px;}
+    .random-toggle { display: flex; align-items: center; font-size: 15px; user-select: none; background: #f8f9fa; padding: 8px 15px; border-radius: 6px; border: 1px solid #e1e4e8;}
+    .random-toggle input { margin-right: 8px; cursor: pointer; width: 16px; height: 16px;}
+
+    .chapter-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    @media (max-width: 500px) { .chapter-grid { grid-template-columns: 1fr; } }
+    
+    .chapter-card { background: white; border-radius: 12px; padding: 18px; display: flex; align-items: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; border: 1px solid transparent;}
+    .chapter-card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); border-color: #3498db;}
+    .chapter-card.all-card { grid-column: 1 / -1; background: #eef7ff; border: 1px dashed #bcdcff;}
+    
+    .chapter-icon { width: 45px; height: 45px; border-radius: 50%; background: #ebf5ff; color: #3498db; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 20px; margin-right: 15px; flex-shrink: 0;}
+    .chapter-info { flex: 1; }
+    .chapter-title { font-size: 16px; font-weight: bold; margin-bottom: 6px; color: #2c3e50;}
+    .chapter-progress { font-size: 13px; color: #7f8c8d; }
+    .progress-bar-bg { width: 100%; height: 6px; background: #ecf0f1; border-radius: 3px; margin-top: 8px; overflow: hidden;}
+    .progress-bar-fill { height: 100%; background: #3498db; border-radius: 3px; transition: width 0.3s;}
+
+    .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .back-btn { padding: 8px 15px; background: #fff; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+    .back-btn:hover { background: #f8f9fa; }
+    .quiz-title { font-size: 18px; font-weight: bold; color: #34495e;}
+    
+    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .tag { display: inline-block; padding: 3px 8px; background: #34495e; color: white; border-radius: 4px; font-size: 12px; margin-bottom: 15px; }
+    .question-text { font-size: 18px; margin-bottom: 20px; line-height: 1.6; font-weight: 500;}
+    
+    .option { display: block; width: 100%; text-align: left; background: #f8f9fa; color: #333; margin-bottom: 12px; padding: 15px; border-radius: 8px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; font-size: 16px;}
+    .option:hover { background: #e9ecef; }
+    .option.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+    .option.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+    
+    .status-bar { margin-top: 20px; text-align: center; color: #7f8c8d; font-size: 14px; font-weight: bold;}
+    #next-btn { background-color: #2ecc71; width: 100%; margin-top: 20px; padding: 15px; font-size: 18px; border: none; border-radius: 8px; color: white; display: none; box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);}
+    #next-btn:hover { background-color: #27ae60; }
+</style>
+<script src="data.js"></script> 
+</head>
+<body>
+
+<h1>📚 极速刷题神器</h1>
+
+<div id="home-view" class="view active">
+    <div class="controls">
+        <select id="mode-select" class="mode-select" onchange="renderHome()">
+            <option value="normal">✅ 正常刷题模式</option>
+            <option value="review">📖 错题复习 (不移除)</option>
+            <option value="eliminate">🔥 消灭错题 (答对移除)</option>
+        </select>
+        <label class="random-toggle">
+            <input type="checkbox" id="is-random"> 随机打乱
+        </label>
+    </div>
+    <div id="chapter-grid" class="chapter-grid"></div>
+</div>
+
+<div id="quiz-view" class="view">
+    <div class="quiz-header">
+        <button class="back-btn" onclick="goHome()">⬅ 返回目录</button>
+        <div class="quiz-title" id="current-quiz-title"></div>
+        <div style="width: 70px;"></div>
+    </div>
+
+    <div id="quiz-container" class="card">
+        <div id="question-area"></div>
+        <button id="next-btn" onclick="nextQuestion()">下一题 ➔</button>
+    </div>
+
+    <div id="end-message" class="card" style="display: none; text-align: center;">
+        <h2>🎉 本部分题目已刷完！</h2>
+        <p id="wrong-count-msg" style="color: #e74c3c; font-weight: bold; margin: 15px 0;"></p>
+        <button onclick="goHome()" style="padding: 10px 20px; background: #3498db; color: white; border:none; border-radius: 5px;">返回主目录</button>
+    </div>
+
+    <div class="status-bar" id="status-bar"></div>
+</div>
+
+<script>
+    let wrongBook = JSON.parse(localStorage.getItem('myWrongBook')) || [];
+    let chapterProgress = JSON.parse(localStorage.getItem('myChapterProgress')) || {};
+    let currentChapter = '', currentMode = 'normal', currentList = [], currentIndex = 0, hasAnswered = false;
+
+    // 映射章节名称（可选）
+    const chapterTitles = { "第 1 章": "职业道德与基本规范", "第 2 章": "系统方案与数据库" };
+
+    window.onload = () => {
+        if(typeof allQuestions === 'undefined') {
+            document.body.innerHTML = "<h2 style='text-align:center;color:red;margin-top:50px;'>未检测到题库！</h2>";
+            return;
+        }
+        renderHome();
+    };
+
+    function saveWrongBook() { localStorage.setItem('myWrongBook', JSON.stringify(wrongBook)); }
+    function saveProgress() {
+        chapterProgress[`${currentChapter}_${currentMode}`] = { index: currentIndex, order: currentList.map(q => q.id) };
+        localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
+    }
+
+    function renderHome() {
+        const mode = document.getElementById('mode-select').value;
+        const chapters = [...new Set(allQuestions.map(q => q.chapter))].filter(Boolean);
+        let html = createCardHTML('all', '综合训练 (全部章节)', '🌟', mode);
+        chapters.forEach((chap, idx) => {
+            const title = chapterTitles[chap] ? `${chap} ${chapterTitles[chap]}` : chap;
+            html += createCardHTML(chap, title, idx + 1, mode);
+        });
+        document.getElementById('chapter-grid').innerHTML = html;
+    }
+
+    function createCardHTML(chapterKey, displayTitle, iconText, mode) {
+        let questions = chapterKey === 'all' ? allQuestions : allQuestions.filter(q => q.chapter === chapterKey);
+        if (mode !== 'normal') questions = questions.filter(q => wrongBook.includes(q.id));
+        const total = questions.length;
+        const saved = chapterProgress[`${chapterKey}_${mode}`];
+        let cIndex = saved && saved.order.length === total ? saved.index : 0;
+        const percent = total === 0 ? 0 : Math.round((cIndex / total) * 100);
+        return `<div class="${chapterKey === 'all' ? 'chapter-card all-card' : 'chapter-card'}" onclick="startChapter('${chapterKey}')">
+            <div class="chapter-icon">${iconText}</div>
+            <div class="chapter-info">
+                <div class="chapter-title">${displayTitle}</div>
+                <div class="chapter-progress">已刷: ${cIndex} / ${total} 题</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%;"></div></div>
+            </div>
+        </div>`;
+    }
+
+    function startChapter(chap) {
+        currentChapter = chap;
+        currentMode = document.getElementById('mode-select').value;
+        const isRandom = document.getElementById('is-random').checked;
+        let baseQuestions = chap === 'all' ? allQuestions : allQuestions.filter(q => q.chapter === chap);
+        if (currentMode !== 'normal') baseQuestions = baseQuestions.filter(q => wrongBook.includes(q.id));
+
+        const saved = chapterProgress[`${chap}_${currentMode}`];
+        if (saved && saved.order.length === baseQuestions.length) {
+            currentIndex = saved.index;
+            currentList = saved.order.map(id => allQuestions.find(q => q.id === id)).filter(Boolean);
+        } else {
+            currentIndex = 0;
+            currentList = [...baseQuestions];
+            if (isRandom) currentList.sort(() => Math.random() - 0.5);
+            else currentList.sort((a, b) => a.id - b.id);
+        }
+        document.getElementById('home-view').classList.remove('active');
+        document.getElementById('quiz-view').classList.add('active');
+        document.getElementById('current-quiz-title').innerText = chap === 'all' ? '综合训练' : chap;
+        loadQuestion();
+    }
+
+    function goHome() {
+        document.getElementById('quiz-view').classList.remove('active');
+        document.getElementById('home-view').classList.add('active');
+        renderHome();
+    }
+
+    function loadQuestion() {
+        document.getElementById('quiz-container').style.display = 'block';
+        document.getElementById('end-message').style.display = 'none';
+        if (currentIndex >= currentList.length) {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('end-message').style.display = 'block';
+            document.getElementById('wrong-count-msg').innerText = `全部完成！`;
+            return;
+        }
+        hasAnswered = false;
+        document.getElementById('next-btn').style.display = 'none';
+        const q = currentList[currentIndex];
+        let html = `<span class="tag">${q.chapter} | 全局第 ${q.id} 题</span><div class="question-text">${currentIndex + 1}. ${q.question}</div>`;
+        q.options.forEach((opt, index) => {
+            html += `<button class="option" onclick="checkAnswer(${index}, ${q.answer}, ${q.id}, this)">${String.fromCharCode(65 + index)}. ${opt}</button>`;
+        });
+        document.getElementById('question-area').innerHTML = html;
+        document.getElementById('status-bar').innerText = `进度: ${currentIndex + 1} / ${currentList.length}`;
+    }
+
+    function checkAnswer(selectedIndex, correctIndex, qId, btnElement) {
+        if (hasAnswered) return;
+        hasAnswered = true;
+        document.querySelectorAll('.option')[correctIndex].classList.add('correct');
+        if (selectedIndex === correctIndex) {
+            if (currentMode === 'eliminate') {
+                wrongBook = wrongBook.filter(id => qId !== id);
+                saveWrongBook();
+            }
+            setTimeout(() => nextQuestion(), 500); // 答对延迟跳转
+        } else {
+            btnElement.classList.add('wrong');
+            if (currentMode === 'normal' && !wrongBook.includes(qId)) {
+                wrongBook.push(qId);
+                saveWrongBook();
+            }
+            document.getElementById('next-btn').style.display = 'block';
+        }
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        saveProgress();
+        loadQuestion();
+    }
+</script>
+</body>
+</html>
