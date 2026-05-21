@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<!-- 极速刷题神器 -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>极速刷题神器</title>
+<title>计算机三级理论</title>
 <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f5f7fa; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
     h1 { text-align: center; color: #2c3e50; margin-bottom: 30px;}
@@ -62,7 +61,7 @@
 </head>
 <body>
 
-<h1>📚 极速刷题神器</h1>
+<h1>📚 计算机三级理论</h1>
 
 <div id="home-view" class="view active">
     <div class="controls">
@@ -111,7 +110,11 @@
     let currentChapter = '', currentMode = 'normal', currentList = [], currentIndex = 0, hasAnswered = false;
 
     // 章节名称映射
-    const chapterTitles = { "第 1 章": "职业道德与基本规范", "第 2 章": "系统方案与数据库" };
+    const chapterTitles = { 
+    "第 1 章": "职业道德与基本规范", 
+    "第 2 章": "系统方案与数据库",
+    "最终章": "冲刺模拟（1001-1110）"   // ✅ 加这一行
+};
 
     window.onload = () => {
         if(typeof allQuestions === 'undefined') {
@@ -231,7 +234,8 @@
         let html = `<span class="tag">${q.chapter} | 全局第 ${q.id} 题</span><div class="question-text">${currentIndex + 1}. ${q.question}</div>`;
         q.options.forEach((opt, index) => {
             html += `<button class="option" onclick="checkAnswer(${index}, ${q.answer}, ${q.id}, this)">${String.fromCharCode(65 + index)}. ${opt}</button>`;
-        });
+		});
+		html += `<button class="option";font-weight:bold;" onclick="dontKnow(${q.answer}, ${q.id})">🤯 不知道 / 直接看答案</button>`;
         document.getElementById('question-area').innerHTML = html;
         document.getElementById('status-bar').innerText = `当前进度: ${currentIndex + 1} / ${currentList.length}`;
     }
@@ -262,6 +266,24 @@
         saveProgress();
         loadQuestion();
     }
+	function dontKnow(correctIndex, qId) {
+    if (hasAnswered) return;
+    hasAnswered = true;
+
+    const options = document.querySelectorAll('.option');
+
+    // 标记正确答案
+    options[correctIndex].classList.add('correct');
+
+    // 加入错题本（和答错一样处理）
+    if (currentMode === 'normal' && !wrongBook.includes(qId)) {
+        wrongBook.push(qId);
+        saveWrongBook();
+    }
+
+    // 显示下一题按钮
+    document.getElementById('next-btn').style.display = 'block';
+}
 </script>
 </body>
 </html>
