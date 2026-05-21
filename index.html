@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>极速刷题神器 - 自动跳转版</title>
+<title>极速刷题神器 - 云端同步版</title>
 <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f5f7fa; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
     h1 { text-align: center; color: #2c3e50; margin-bottom: 30px;}
@@ -13,6 +13,14 @@
     .view.active { display: block; }
 
     .controls { display: flex; gap: 15px; margin-bottom: 20px; justify-content: space-between; flex-wrap: wrap; background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center;}
+    
+    /* 新增的同步操作区样式 */
+    .sync-actions { display: flex; gap: 10px; width: 100%; justify-content: center; margin-bottom: 10px; padding-bottom: 15px; border-bottom: 1px dashed #ecf0f1; }
+    .sync-btn { padding: 6px 12px; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; transition: opacity 0.2s;}
+    .sync-btn:hover { opacity: 0.8; }
+    .btn-export { background-color: #9b59b6; color: white; }
+    .btn-import { background-color: #e67e22; color: white; }
+
     .mode-select { padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; outline: none; flex-grow: 1; min-width: 150px;}
     .random-toggle { display: flex; align-items: center; font-size: 15px; user-select: none; background: #f8f9fa; padding: 8px 15px; border-radius: 6px; border: 1px solid #e1e4e8;}
     .random-toggle input { margin-right: 8px; cursor: pointer; width: 16px; height: 16px;}
@@ -57,13 +65,18 @@
 
 <div id="home-view" class="view active">
     <div class="controls">
+        <div class="sync-actions">
+            <button class="sync-btn btn-export" onclick="exportData()">📤 导出存档码</button>
+            <button class="sync-btn btn-import" onclick="importData()">📥 导入存档码</button>
+        </div>
+
         <select id="mode-select" class="mode-select" onchange="renderHome()">
             <option value="normal">✅ 正常刷题模式</option>
             <option value="review">📖 错题复习 (不移除)</option>
             <option value="eliminate">🔥 消灭错题 (答对移除)</option>
         </select>
         <label class="random-toggle">
-            <input type="checkbox" id="is-random"> 随机打乱
+            <input type="checkbox" id="is-random" onchange="renderHome()"> 随机打乱
         </label>
     </div>
     <div id="chapter-grid" class="chapter-grid"></div>
@@ -107,9 +120,53 @@
     };
 
     function saveWrongBook() { localStorage.setItem('myWrongBook', JSON.stringify(wrongBook)); }
+    
     function saveProgress() {
         chapterProgress[`${currentChapter}_${currentMode}`] = { index: currentIndex, order: currentList.map(q => q.id) };
         localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
+    }
+
+    // --- 新增：导出存档数据 ---
+    function exportData() {
+        const allData = {
+            wrongBook: wrongBook,
+            chapterProgress: chapterProgress
+        };
+        // 转为 Base64，处理中文转码问题
+        const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(allData))));
+        
+        navigator.clipboard.writeText(encodedData).then(() => {
+            alert("✅ 存档码已成功复制到剪贴板！\n请通过微信等方式发给你的手机，然后在手机端点击【导入存档码】即可同步进度。");
+        }).catch(err => {
+            prompt("自动复制失败，请手动全选复制以下存档码：", encodedData);
+        });
+    }
+
+    // --- 新增：导入存档数据 ---
+    function importData() {
+        const encodedData = prompt("📥 请粘贴你在另一台设备上生成的【存档码】\n注意：导入成功后，当前设备的进度将被完全覆盖！");
+        if (!encodedData) return;
+
+        try {
+            const jsonString = decodeURIComponent(escape(atob(encodedData)));
+            const parsedData = JSON.parse(jsonString);
+
+            if (parsedData.wrongBook !== undefined && parsedData.chapterProgress !== undefined) {
+                wrongBook = parsedData.wrongBook;
+                chapterProgress = parsedData.chapterProgress;
+                
+                saveWrongBook();
+                localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
+                
+                alert("🎉 存档导入成功！页面即将刷新...");
+                location.reload(); 
+            } else {
+                alert("❌ 存档码格式不正确，请确保复制了完整的字符串。");
+            }
+        } catch (e) {
+            alert("❌ 解析失败，存档码可能已损坏或复制不全！");
+            console.error(e);
+        }
     }
 
     function renderHome() {
@@ -148,6 +205,7 @@
         if (currentMode !== 'normal') baseQuestions = baseQuestions.filter(q => wrongBook.includes(q.id));
 
         const saved = chapterProgress[`${chap}_${currentMode}`];
+        // 尝试恢复存档（如果数量没变）
         if (saved && saved.order.length === baseQuestions.length) {
             currentIndex = saved.index;
             currentList = saved.order.map(id => allQuestions.find(q => q.id === id)).filter(Boolean);
@@ -193,6 +251,7 @@
         if (hasAnswered) return;
         hasAnswered = true;
         document.querySelectorAll('.option')[correctIndex].classList.add('correct');
+        
         if (selectedIndex === correctIndex) {
             if (currentMode === 'eliminate') {
                 wrongBook = wrongBook.filter(id => qId !== id);
