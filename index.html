@@ -2577,16 +2577,18 @@ public class DataAnalyzer {
 
     let currentUmlGroup = '';
     let currentUmlIdx = 0;
+    let currentUmlCode = '';
 
     function showUmlQuestion(groupKey, idx) {
         currentUmlGroup = groupKey;
         currentUmlIdx = idx;
         const q = umlData[groupKey].questions[idx];
+        currentUmlCode = q.mermaid;
         document.getElementById('uml-list-view').style.display = 'none';
         document.getElementById('uml-detail-view').classList.add('active');
         document.getElementById('uml-detail-title').innerText = q.id + ' - ' + q.title;
         document.getElementById('uml-requirements').innerHTML = '<strong>📋 题目要求：</strong><br><br>' + q.req.replace(/\\n/g, '<br>');
-        document.getElementById('uml-mermaid-diagram').textContent = q.mermaid;
+        document.getElementById('uml-mermaid-diagram').innerHTML = '';
         document.getElementById('uml-diagram-box').style.display = 'none';
         document.getElementById('uml-toggle-btn').innerText = '👁 查看 UML 图答案';
         document.getElementById('uml-toggle-btn').classList.remove('showing');
@@ -2604,9 +2606,9 @@ public class DataAnalyzer {
             box.style.display = 'block';
             btn.innerText = '🙈 隐藏 UML 图答案';
             btn.classList.add('showing');
-            // Re-render mermaid
             try {
-                await mermaid.run({ querySelector: '#uml-mermaid-diagram' });
+                const { svg } = await mermaid.render('uml-svg-' + Date.now(), currentUmlCode);
+                document.getElementById('uml-mermaid-diagram').innerHTML = svg;
             } catch(e) {
                 document.getElementById('uml-mermaid-diagram').innerHTML = '<p style="color:red;">Mermaid 渲染失败: ' + e.message + '</p>';
             }
