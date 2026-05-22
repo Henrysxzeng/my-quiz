@@ -369,8 +369,11 @@
         }
 
         initSyncUI();
-        if (syncId) { syncPull().then(() => renderHome()); }
-        else { renderHome(); }
+        if (syncId) {
+            syncPull().then(() => { renderHome(); renderExtraCards(); });
+        } else {
+            renderHome();
+        }
 
         if(typeof allQuestions === 'undefined') {
             document.body.innerHTML = "<h2 style='text-align:center;color:red;margin-top:50px;'>未检测到题库 data.js！</h2>";
@@ -815,7 +818,7 @@
     }
 
     async function syncPull() {
-        if (!syncId) return;
+        if (!syncId) return false;
         const statusEl = document.getElementById('sync-status');
         const pullBtn = document.getElementById('sync-pull-btn');
         statusEl.innerText = '⏳ 拉取中...';
@@ -826,45 +829,72 @@
             const resp = await fetch('/api/sync?syncId=' + encodeURIComponent(syncId));
             if (!resp.ok) {
                 const err = await resp.json().catch(()=>({}));
-                statusEl.innerText = '❌ ' + (err.error || '拉取失败 (HTTP ' + resp.status + ')');
+                statusEl.innerText = '❌ ' + (err.error || '拉取失败 HTTP ' + resp.status);
                 statusEl.className = 'sync-status';
                 if (pullBtn) pullBtn.disabled = false;
-                return;
+                return false;
             }
             const json = await resp.json();
             if (!json.data) {
-                statusEl.innerText = '📭 云端暂无数据，请先在旧设备上启用同步';
+                statusEl.innerText = '📭 云端暂无数据';
                 statusEl.className = 'sync-status';
                 if (pullBtn) pullBtn.disabled = false;
-                return;
+                return false;
             }
 
             const cloud = json.data;
-            const cloudTime = new Date(cloud.timestamp || 0).getTime();
-            const localTime = new Date(localStorage.getItem('syncLastTime') || 0).getTime();
+            let merged = false;
+            if (cloud.wrongBook && cloud.wrongBook.length > 0) {
+                if (wrongBook.length === 0 || cloud.wrongBook.length >= wrongBook.length) {
+                    wrongBook = cloud.wrongBook;
+                    localStorage.setItem('myWrongBook', JSON.stringify(wrongBook));
+                    merged = true;
+                }
+            }
+            if (cloud.chapterProgress && Object.keys(cloud.chapterProgress).length > 0) {
+                const cloudKeys = Object.keys(cloud.chapterProgress).length;
+                const localKeys = Object.keys(chapterProgress).length;
+                if (localKeys === 0 || cloudKeys >= localKeys) {
+                    chapterProgress = cloud.chapterProgress;
+                    localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
+                    merged = true;
+                }
+            }
+            if (cloud.sqlErrors && cloud.sqlErrors.length > 0) {
+                if (sqlErrors.length === 0 || cloud.sqlErrors.length >= sqlErrors.length) {
+                    sqlErrors = cloud.sqlErrors;
+                    localStorage.setItem('sqlErrors', JSON.stringify(sqlErrors));
+                    merged = true;
+                }
+            }
+            localStorage.setItem('syncLastTime', cloud.timestamp || new Date().toISOString());
 
-            const wbLen = (cloud.wrongBook||[]).length;
-            const cpKeys = Object.keys(cloud.chapterProgress||{}).length;
-            const seLen = (cloud.sqlErrors||[]).length;
-            const summary = '选择题错题:' + wbLen + ' 进度章节:' + cpKeys + ' SQL错题:' + seLen;
+            const wbLen = wrongBook.length;
+            const cpKeys = Object.keys(chapterProgress).length;
+            const seLen = sqlErrors.length;
+            const summary = '选择题错题:' + wbLen + ' 进度:' + cpKeys + '章 SQL错题:' + seLen;
 
-            if (cloudTime > localTime) {
-                if (cloud.wrongBook) { wrongBook = cloud.wrongBook; localStorage.setItem('myWrongBook', JSON.stringify(wrongBook)); }
-                if (cloud.chapterProgress) { localStorage.setItem('myChapterProgress', JSON.stringify(cloud.chapterProgress)); }
-                if (cloud.sqlErrors) { sqlErrors = cloud.sqlErrors; localStorage.setItem('sqlErrors', JSON.stringify(sqlErrors)); }
-                localStorage.setItem('syncLastTime', cloud.timestamp);
-                statusEl.innerText = '✅ 已同步 (' + summary + ')，刷新中...';
+            if (merged) {
+                statusEl.innerText = '✅ 已同步 (' + summary + ')，刷新界面...';
                 statusEl.className = 'sync-status synced';
-                setTimeout(() => location.reload(), 600);
+                // Refresh UI instead of reload
+                if (document.getElementById('choice-section').style.display !== 'none') {
+                    renderHome();
+                }
+                setTimeout(() => {
+                    statusEl.innerText = '🟢 已同步 (' + summary + ')';
+                }, 1500);
             } else {
                 statusEl.innerText = '🟢 已是最新 (' + summary + ')';
                 statusEl.className = 'sync-status synced';
-                if (pullBtn) pullBtn.disabled = false;
             }
+            if (pullBtn) pullBtn.disabled = false;
+            return true;
         } catch (e) {
             statusEl.innerText = '❌ 网络错误: ' + e.message.slice(0, 30);
             statusEl.className = 'sync-status';
             if (pullBtn) pullBtn.disabled = false;
+            return false;
         }
     }
 

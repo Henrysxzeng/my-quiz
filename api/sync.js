@@ -5,25 +5,33 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const API_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const API_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  const API_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || '';
+  const API_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || '';
   if (!API_URL || !API_TOKEN) {
-    return res.status(500).json({ error: 'Redis 未配置。请在 Vercel Dashboard → Storage → 点击 Upstash → Create → Connect 到本项目。' });
+    return res.status(500).json({ error: 'Redis 未配置' });
   }
 
   if (req.method === 'GET') {
     const { syncId } = req.query;
-    if (!syncId) return res.status(400).json({ error: '缺少 syncId 参数' });
+    if (!syncId) return res.status(400).json({ error: '缺少 syncId' });
 
+    const key = 'quizdata-' + encodeURIComponent(syncId);
     try {
-      const resp = await fetch(`${API_URL}/get/quiz:${encodeURIComponent(syncId)}`, {
-        headers: { Authorization: `Bearer ${API_TOKEN}` }
+      const resp = await fetch(API_URL + '/get/' + key, {
+        headers: { Authorization: 'Bearer ' + API_TOKEN }
       });
-      if (!resp.ok) throw new Error(`Upstash responded with ${resp.status}`);
+      if (!resp.ok) {
+        return res.status(502).json({ error: 'Upstash GET error ' + resp.status });
+      }
       const json = await resp.json();
-      return res.status(200).json({ data: json.result ? JSON.parse(json.result) : null });
+      // Upstash returns {"result": "string"}
+      if (!json.result) {
+        return res.status(200).json({ data: null });
+      }
+      const data = JSON.parse(json.result);
+      return res.status(200).json({ data });
     } catch (err) {
-      return res.status(500).json({ error: err.message });
+      return res.status(500).json({ error: 'GET error: ' + err.message });
     }
   }
 
@@ -31,16 +39,23 @@ export default async function handler(req, res) {
     const { syncId, data } = req.body;
     if (!syncId || !data) return res.status(400).json({ error: '缺少 syncId 或 data' });
 
+    const key = 'quizdata-' + encodeURIComponent(syncId);
     try {
-      const resp = await fetch(`${API_URL}/set/quiz:${encodeURIComponent(syncId)}`, {
+      const resp = await fetch(API_URL + '/set/' + key, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${API_TOKEN}` },
+        headers: {
+          Authorization: 'Bearer ' + API_TOKEN,
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ value: JSON.stringify(data) })
       });
-      if (!resp.ok) throw new Error(`Upstash responded with ${resp.status}`);
+      if (!resp.ok) {
+        const txt = await resp.text();
+        return res.status(502).json({ error: 'Upstash SET error ' + resp.status + ': ' + txt.slice(0, 100) });
+      }
       return res.status(200).json({ ok: true });
     } catch (err) {
-      return res.status(500).json({ error: err.message });
+      return res.status(500).json({ error: 'SET error: ' + err.message });
     }
   }
 
