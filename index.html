@@ -757,13 +757,20 @@
         syncId = code;
         localStorage.setItem('syncId', syncId);
         initSyncUI();
-        document.getElementById('sync-status').innerText = '⏳ 同步中...';
+        document.getElementById('sync-status').innerText = '⏳ 连接中...';
 
+        // First pull
         await syncPull();
-        await syncPush();
 
-        if (document.getElementById('sync-status').innerText.includes('⏳')) {
-            document.getElementById('sync-status').innerText = '🟢 已同步';
+        // If pull found cloud data and triggered reload, we won't reach here
+        // If pull found nothing or data is same age, push our local data
+        const pushed = await syncPush();
+        if (pushed) {
+            const data = getSyncData();
+            const wbLen = data.wrongBook.length;
+            const cpKeys = Object.keys(data.chapterProgress).length;
+            const seLen = data.sqlErrors.length;
+            document.getElementById('sync-status').innerText = '🟢 已上传 (选择题错题:' + wbLen + ' 进度:' + cpKeys + '章 SQL错题:' + seLen + ')';
         }
         document.getElementById('sync-status').className = 'sync-status synced';
     }
@@ -785,17 +792,25 @@
     }
 
     async function syncPush() {
-        if (!syncId) return;
+        if (!syncId) return false;
+        const statusEl = document.getElementById('sync-status');
         try {
             const data = getSyncData();
-            await fetch('/api/sync', {
+            const resp = await fetch('/api/sync', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ syncId: syncId, data: data })
             });
-            localStorage.setItem('syncLastTime', new Date().toISOString());
+            if (!resp.ok) {
+                const err = await resp.json().catch(()=>({}));
+                statusEl.innerText = '❌ 上传失败: ' + (err.error || 'HTTP ' + resp.status);
+                return false;
+            }
+            localStorage.setItem('syncLastTime', data.timestamp);
+            return true;
         } catch (e) {
-            console.log('Sync push failed:', e.message);
+            statusEl.innerText = '❌ 网络错误: ' + e.message.slice(0,30);
+            return false;
         }
     }
 
@@ -818,7 +833,7 @@
             }
             const json = await resp.json();
             if (!json.data) {
-                statusEl.innerText = '📭 云端暂无数据';
+                statusEl.innerText = '📭 云端暂无数据，请先在旧设备上启用同步';
                 statusEl.className = 'sync-status';
                 if (pullBtn) pullBtn.disabled = false;
                 return;
@@ -828,16 +843,21 @@
             const cloudTime = new Date(cloud.timestamp || 0).getTime();
             const localTime = new Date(localStorage.getItem('syncLastTime') || 0).getTime();
 
+            const wbLen = (cloud.wrongBook||[]).length;
+            const cpKeys = Object.keys(cloud.chapterProgress||{}).length;
+            const seLen = (cloud.sqlErrors||[]).length;
+            const summary = '选择题错题:' + wbLen + ' 进度章节:' + cpKeys + ' SQL错题:' + seLen;
+
             if (cloudTime > localTime) {
-                if (cloud.wrongBook) { wrongBook = cloud.wrongBook; saveWrongBook(); }
-                if (cloud.chapterProgress) { chapterProgress = cloud.chapterProgress; localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress)); }
+                if (cloud.wrongBook) { wrongBook = cloud.wrongBook; localStorage.setItem('myWrongBook', JSON.stringify(wrongBook)); }
+                if (cloud.chapterProgress) { localStorage.setItem('myChapterProgress', JSON.stringify(cloud.chapterProgress)); }
                 if (cloud.sqlErrors) { sqlErrors = cloud.sqlErrors; localStorage.setItem('sqlErrors', JSON.stringify(sqlErrors)); }
                 localStorage.setItem('syncLastTime', cloud.timestamp);
-                statusEl.innerText = '✅ 同步成功，刷新中...';
+                statusEl.innerText = '✅ 已同步 (' + summary + ')，刷新中...';
                 statusEl.className = 'sync-status synced';
-                setTimeout(() => location.reload(), 500);
+                setTimeout(() => location.reload(), 600);
             } else {
-                statusEl.innerText = '🟢 已是最新数据';
+                statusEl.innerText = '🟢 已是最新 (' + summary + ')';
                 statusEl.className = 'sync-status synced';
                 if (pullBtn) pullBtn.disabled = false;
             }
