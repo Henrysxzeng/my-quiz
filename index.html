@@ -196,33 +196,9 @@
     body.eye-care .sql-knowledge-group { background: #24292e; border-color: #444c56; }
     body.eye-care .sql-knowledge-group .kg-name { color: #e1e4e8; }
 
-    /* ======== 🔄 跨设备同步条 ======== */
-    .sync-bar { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: white; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); font-size: 13px; flex-wrap: wrap; transition: all 0.3s; }
-    .sync-bar .sync-status { color: #7f8c8d; white-space: nowrap; }
-    .sync-bar .sync-status.synced { color: #27ae60; }
-    .sync-bar input { padding: 5px 10px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; width: 120px; outline: none; }
-    .sync-bar input:focus { border-color: #3498db; }
-    .sync-bar .sync-small-btn { padding: 5px 10px; border: none; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; }
-    .sync-bar .sync-small-btn.enable { background: #3498db; color: white; }
-    .sync-bar .sync-small-btn.enable:hover { background: #2980b9; }
-    .sync-bar .sync-small-btn.disable { background: #e74c3c; color: white; }
-    .sync-bar .sync-small-btn.disable:hover { background: #c0392b; }
-    .sync-bar .sync-small-btn.pull { background: #27ae60; color: white; }
-    .sync-bar .sync-small-btn.pull:hover { background: #219a52; }
-    body.eye-care .sync-bar { background: #24292e; color: #e1e4e8; }
-    body.eye-care .sync-bar input { background: #2f363d; color: #e1e4e8; border-color: #444c56; }
-</style>
 <script src="data.js"></script> 
 </head>
 <body>
-
-<div class="sync-bar" id="sync-bar">
-    <span class="sync-status" id="sync-status">🔄 未启用同步</span>
-    <input type="text" id="sync-code-input" placeholder="输入同步码" style="display:none;">
-    <button class="sync-small-btn enable" id="sync-enable-btn" onclick="enableSync()">启用</button>
-    <button class="sync-small-btn pull" id="sync-pull-btn" onclick="syncPull()" style="display:none;">📥 拉取</button>
-    <button class="sync-small-btn disable" id="sync-disable-btn" onclick="disableSync()" style="display:none;">断开</button>
-</div>
 
 <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchMode('choice')">📝 选择题</button>
@@ -368,12 +344,7 @@
             document.getElementById('theme-toggle').innerText = '☀️';
         }
 
-        initSyncUI();
-        if (syncId) {
-            syncPull().then(() => { renderHome(); renderExtraCards(); });
-        } else {
-            renderHome();
-        }
+        renderHome();
 
         if(typeof allQuestions === 'undefined') {
             document.body.innerHTML = "<h2 style='text-align:center;color:red;margin-top:50px;'>未检测到题库 data.js！</h2>";
@@ -389,17 +360,16 @@
         document.getElementById('theme-toggle').innerText = isDark ? '☀️' : '🌙';
     }
 
-    function saveWrongBook() { localStorage.setItem('myWrongBook', JSON.stringify(wrongBook)); autoSync(); }
+    function saveWrongBook() { localStorage.setItem('myWrongBook', JSON.stringify(wrongBook)); }
 
     function saveProgress() {
         chapterProgress[`${currentChapter}_${currentMode}`] = { index: currentIndex, order: currentList.map(q => q.id) };
         localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
-        autoSync();
     }
 
     // 导出 JSON 文件
     function exportData() {
-        const allData = { wrongBook, chapterProgress, timestamp: new Date().getTime() };
+        const allData = { wrongBook, chapterProgress, sqlErrors, timestamp: new Date().getTime() };
         const blob = new Blob([JSON.stringify(allData)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -419,6 +389,7 @@
                 const data = JSON.parse(e.target.result);
                 wrongBook = data.wrongBook;
                 chapterProgress = data.chapterProgress;
+                if (data.sqlErrors) { sqlErrors = data.sqlErrors; saveSqlErrors(); }
                 saveWrongBook();
                 localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
                 alert("🎉 存档导入成功！");
@@ -549,7 +520,7 @@
 
     // 手机端专用：复制存档代码到剪贴板
     function copyData() {
-        const allData = { wrongBook, chapterProgress, timestamp: new Date().getTime() };
+        const allData = { wrongBook, chapterProgress, sqlErrors, timestamp: new Date().getTime() };
         const str = JSON.stringify(allData);
         
         const textArea = document.createElement("textarea");
@@ -579,6 +550,7 @@
             if (data.wrongBook && data.chapterProgress) {
                 wrongBook = data.wrongBook;
                 chapterProgress = data.chapterProgress;
+                if (data.sqlErrors) { sqlErrors = data.sqlErrors; saveSqlErrors(); }
                 saveWrongBook();
                 localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
                 alert("🎉 存档导入成功！");
@@ -723,189 +695,7 @@
 
     // ======== 🤖 AI 批改 ========
     let sqlErrors = JSON.parse(localStorage.getItem('sqlErrors')) || [];
-
-    // ======== 🔄 跨设备同步 ========
-    let syncId = localStorage.getItem('syncId') || '';
-    let syncTimer = null;
-
-    function initSyncUI() {
-        const statusEl = document.getElementById('sync-status');
-        const inputEl = document.getElementById('sync-code-input');
-        const enableBtn = document.getElementById('sync-enable-btn');
-        const pullBtn = document.getElementById('sync-pull-btn');
-        const disableBtn = document.getElementById('sync-disable-btn');
-
-        if (syncId) {
-            statusEl.innerText = '🟢 已同步';
-            statusEl.className = 'sync-status synced';
-            inputEl.style.display = 'none';
-            enableBtn.style.display = 'none';
-            pullBtn.style.display = '';
-            disableBtn.style.display = '';
-        } else {
-            statusEl.innerText = '🔄 未启用同步';
-            statusEl.className = 'sync-status';
-            inputEl.style.display = '';
-            enableBtn.style.display = '';
-            pullBtn.style.display = 'none';
-            disableBtn.style.display = 'none';
-        }
-    }
-
-    async function enableSync() {
-        const code = document.getElementById('sync-code-input').value.trim();
-        if (!code) { alert('请输入一个同步码（用于多设备共享数据）'); return; }
-        if (code.length < 3) { alert('同步码至少 3 个字符'); return; }
-
-        syncId = code;
-        localStorage.setItem('syncId', syncId);
-        initSyncUI();
-        document.getElementById('sync-status').innerText = '⏳ 连接中...';
-
-        // First pull
-        await syncPull();
-
-        // If pull found cloud data and triggered reload, we won't reach here
-        // If pull found nothing or data is same age, push our local data
-        const pushed = await syncPush();
-        if (pushed) {
-            const data = getSyncData();
-            const wbLen = data.wrongBook.length;
-            const cpKeys = Object.keys(data.chapterProgress).length;
-            const seLen = data.sqlErrors.length;
-            document.getElementById('sync-status').innerText = '🟢 已上传 (选择题错题:' + wbLen + ' 进度:' + cpKeys + '章 SQL错题:' + seLen + ')';
-        }
-        document.getElementById('sync-status').className = 'sync-status synced';
-    }
-
-    function disableSync() {
-        if (!confirm('确定要断开同步吗？本地数据不会丢失。')) return;
-        syncId = '';
-        localStorage.removeItem('syncId');
-        initSyncUI();
-    }
-
-    function getSyncData() {
-        return {
-            wrongBook: wrongBook,
-            chapterProgress: chapterProgress,
-            sqlErrors: sqlErrors,
-            timestamp: new Date().toISOString()
-        };
-    }
-
-    async function syncPush() {
-        if (!syncId) return false;
-        const statusEl = document.getElementById('sync-status');
-        try {
-            const data = getSyncData();
-            const resp = await fetch('/api/sync', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ syncId: syncId, data: data })
-            });
-            if (!resp.ok) {
-                const err = await resp.json().catch(()=>({}));
-                statusEl.innerText = '❌ 上传失败: ' + (err.error || 'HTTP ' + resp.status);
-                return false;
-            }
-            localStorage.setItem('syncLastTime', data.timestamp);
-            return true;
-        } catch (e) {
-            statusEl.innerText = '❌ 网络错误: ' + e.message.slice(0,30);
-            return false;
-        }
-    }
-
-    async function syncPull() {
-        if (!syncId) return false;
-        const statusEl = document.getElementById('sync-status');
-        const pullBtn = document.getElementById('sync-pull-btn');
-        statusEl.innerText = '⏳ 拉取中...';
-        statusEl.className = 'sync-status';
-        if (pullBtn) pullBtn.disabled = true;
-
-        try {
-            const resp = await fetch('/api/sync?syncId=' + encodeURIComponent(syncId));
-            if (!resp.ok) {
-                const err = await resp.json().catch(()=>({}));
-                statusEl.innerText = '❌ ' + (err.error || '拉取失败 HTTP ' + resp.status);
-                statusEl.className = 'sync-status';
-                if (pullBtn) pullBtn.disabled = false;
-                return false;
-            }
-            const json = await resp.json();
-            if (!json.data) {
-                statusEl.innerText = '📭 云端暂无数据';
-                statusEl.className = 'sync-status';
-                if (pullBtn) pullBtn.disabled = false;
-                return false;
-            }
-
-            const cloud = json.data;
-            let merged = false;
-            if (cloud.wrongBook && cloud.wrongBook.length > 0) {
-                if (wrongBook.length === 0 || cloud.wrongBook.length >= wrongBook.length) {
-                    wrongBook = cloud.wrongBook;
-                    localStorage.setItem('myWrongBook', JSON.stringify(wrongBook));
-                    merged = true;
-                }
-            }
-            if (cloud.chapterProgress && Object.keys(cloud.chapterProgress).length > 0) {
-                const cloudKeys = Object.keys(cloud.chapterProgress).length;
-                const localKeys = Object.keys(chapterProgress).length;
-                if (localKeys === 0 || cloudKeys >= localKeys) {
-                    chapterProgress = cloud.chapterProgress;
-                    localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
-                    merged = true;
-                }
-            }
-            if (cloud.sqlErrors && cloud.sqlErrors.length > 0) {
-                if (sqlErrors.length === 0 || cloud.sqlErrors.length >= sqlErrors.length) {
-                    sqlErrors = cloud.sqlErrors;
-                    localStorage.setItem('sqlErrors', JSON.stringify(sqlErrors));
-                    merged = true;
-                }
-            }
-            localStorage.setItem('syncLastTime', cloud.timestamp || new Date().toISOString());
-
-            const wbLen = wrongBook.length;
-            const cpKeys = Object.keys(chapterProgress).length;
-            const seLen = sqlErrors.length;
-            const summary = '选择题错题:' + wbLen + ' 进度:' + cpKeys + '章 SQL错题:' + seLen;
-
-            if (merged) {
-                statusEl.innerText = '✅ 已同步 (' + summary + ')，刷新界面...';
-                statusEl.className = 'sync-status synced';
-                // Refresh UI instead of reload
-                if (document.getElementById('choice-section').style.display !== 'none') {
-                    renderHome();
-                }
-                setTimeout(() => {
-                    statusEl.innerText = '🟢 已同步 (' + summary + ')';
-                }, 1500);
-            } else {
-                statusEl.innerText = '🟢 已是最新 (' + summary + ')';
-                statusEl.className = 'sync-status synced';
-            }
-            if (pullBtn) pullBtn.disabled = false;
-            return true;
-        } catch (e) {
-            statusEl.innerText = '❌ 网络错误: ' + e.message.slice(0, 30);
-            statusEl.className = 'sync-status';
-            if (pullBtn) pullBtn.disabled = false;
-            return false;
-        }
-    }
-
-    function autoSync() {
-        if (!syncId) return;
-        clearTimeout(syncTimer);
-        syncTimer = setTimeout(() => syncPush(), 2000);
-    }
-
-    function saveSqlErrors() { localStorage.setItem('sqlErrors', JSON.stringify(sqlErrors)); autoSync(); }
-
+    function saveSqlErrors() { localStorage.setItem('sqlErrors', JSON.stringify(sqlErrors)); }
     function renderExtraCards() {
         const container = document.getElementById('sql-extra-cards');
         if (!container) return;
