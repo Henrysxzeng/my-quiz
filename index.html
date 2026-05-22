@@ -83,10 +83,65 @@
     body.eye-care .status-bar { color: #8b949e; }
     body.eye-care .sync-actions { border-bottom: 1px dashed #444c56; }
     body.eye-care #next-btn { box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
+
+    /* ======== 📑 顶部导航切换 ======== */
+    .nav-tabs { display: flex; gap: 0; margin-bottom: 25px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .nav-tab { flex: 1; padding: 12px 20px; border: none; font-size: 16px; font-weight: bold; background: white; color: #7f8c8d; cursor: pointer; transition: all 0.2s; }
+    .nav-tab.active { background: #3498db; color: white; }
+    .nav-tab:hover:not(.active) { background: #eef2ff; color: #3498db; }
+    body.eye-care .nav-tabs { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    body.eye-care .nav-tab { background: #24292e; color: #8b949e; }
+    body.eye-care .nav-tab.active { background: #1f6feb; color: white; }
+    body.eye-care .nav-tab:hover:not(.active) { background: #323e4d; color: #6cb6ff; }
+
+    /* ======== 💾 SQL 刷题区样式 ======== */
+    .sql-db-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .sql-db-card { background: white; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; border: 1px solid transparent; }
+    .sql-db-card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); border-color: #e67e22; }
+    .sql-db-card .db-icon { font-size: 40px; margin-bottom: 10px; }
+    .sql-db-card .db-name { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 4px; }
+    .sql-db-card .db-count { font-size: 13px; color: #7f8c8d; }
+
+    .sql-set-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; }
+    .sql-set-card { background: white; border-radius: 10px; padding: 16px 20px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: transform 0.2s; border-left: 4px solid #e67e22; }
+    .sql-set-card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+
+    .sql-question { background: white; border-radius: 10px; padding: 18px 20px; margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+    .sql-question .q-num { display: inline-block; background: #e67e22; color: white; border-radius: 4px; padding: 2px 8px; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
+    .sql-question .q-text { font-size: 15px; line-height: 1.5; margin-bottom: 10px; white-space: pre-wrap; }
+    .sql-textarea { width: 100%; min-height: 80px; font-family: 'Consolas','Courier New',monospace; font-size: 14px; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; resize: vertical; outline: none; box-sizing: border-box; background: #fafbfc; color: #333; line-height: 1.5; }
+    .sql-textarea:focus { border-color: #e67e22; box-shadow: 0 0 0 2px rgba(230,126,34,0.15); }
+    .sql-answer-box { margin-top: 8px; padding: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; display: none; }
+    .sql-answer-box pre { margin: 0; font-family: 'Consolas','Courier New',monospace; font-size: 14px; white-space: pre-wrap; color: #166534; }
+    .sql-toggle-btn { margin-top: 8px; padding: 6px 14px; background: #e67e22; color: white; border: none; border-radius: 5px; font-size: 13px; font-weight: bold; }
+    .sql-toggle-btn:hover { background: #d35400; }
+    .sql-toggle-btn.showing { background: #95a5a6; }
+    .sql-toggle-btn.showing:hover { background: #7f8c8d; }
+
+    .sql-tables-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+    .sql-tables-box h3 { margin: 0 0 8px 0; font-size: 16px; color: #2c3e50; }
+    .sql-tables-box pre { margin: 0; font-family: 'Consolas','Courier New',monospace; font-size: 13px; white-space: pre-wrap; color: #475569; line-height: 1.6; }
+
+    body.eye-care .sql-db-card, body.eye-care .sql-set-card, body.eye-care .sql-question, body.eye-care .sql-tables-box { background: #24292e; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-color: #444c56; }
+    body.eye-care .sql-db-card .db-name, body.eye-care .sql-tables-box h3 { color: #e1e4e8; }
+    body.eye-care .sql-db-card .db-count { color: #8b949e; }
+    body.eye-care .sql-set-card { border-left-color: #e67e22; }
+    body.eye-care .sql-textarea { background: #2f363d; color: #e1e4e8; border-color: #444c56; }
+    body.eye-care .sql-answer-box { background: #1a332a; border-color: #2d5a3d; }
+    body.eye-care .sql-answer-box pre { color: #7ee787; }
+    body.eye-care .sql-tables-box { background: #1f2a36; border-color: #444c56; }
+    body.eye-care .sql-tables-box pre { color: #c8d1d9; }
 </style>
 <script src="data.js"></script> 
 </head>
 <body>
+
+<div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchMode('choice')">📝 选择题</button>
+    <button class="nav-tab" onclick="switchMode('sql')">💾 SQL 刷题</button>
+</div>
+
+<div id="choice-section">
 
 <h1 style="position: relative;">
     📚 计算机三级理论
@@ -144,6 +199,48 @@
     </div>
     <div id="full-page-content" style="margin-top: 20px;"></div>
 </div>
+
+</div><!-- /#choice-section -->
+
+<!-- ==================== 💾 SQL 刷题区 ==================== -->
+<div id="sql-section" style="display:none;">
+
+    <div id="sql-db-view">
+        <h1 style="text-align:center; color:#2c3e50;">💾 数据库 SQL 练习</h1>
+        <div class="sql-db-grid">
+            <div class="sql-db-card" onclick="showSqlSets('petstore')">
+                <div class="db-icon">🐾</div>
+                <div class="db-name">petstore</div>
+                <div class="db-count">3 套题 · 29 题</div>
+            </div>
+            <div class="sql-db-card" onclick="showSqlSets('studentdb')">
+                <div class="db-icon">🎓</div>
+                <div class="db-name">studentdb</div>
+                <div class="db-count">2 套题 · 20 题</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sql-set-view" class="view">
+        <div class="quiz-header">
+            <button class="back-btn" onclick="backToSqlDb()">⬅ 返回数据库</button>
+            <div class="quiz-title" id="sql-set-title"></div>
+            <div style="width:70px;"></div>
+        </div>
+        <div class="sql-set-grid" id="sql-set-grid"></div>
+    </div>
+
+    <div id="sql-quiz-view" class="view">
+        <div class="quiz-header">
+            <button class="back-btn" onclick="backToSqlSets()">⬅ 返回套题列表</button>
+            <div class="quiz-title" id="sql-quiz-title"></div>
+            <div style="width:70px;"></div>
+        </div>
+        <div class="sql-tables-box" id="sql-tables-box"></div>
+        <div id="sql-questions-list"></div>
+    </div>
+
+</div><!-- /#sql-section -->
 
 <script>
     let wrongBook = JSON.parse(localStorage.getItem('myWrongBook')) || [];
@@ -425,6 +522,156 @@
         document.getElementById('home-view').classList.add('active');
         renderHome();
     }
+
+    // ======== 💾 SQL 刷题功能区 ========
+    let currentSqlDb = '';
+    let currentSqlSet = '';
+
+    function switchMode(mode) {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        if (mode === 'choice') {
+            document.querySelector('.nav-tab:first-child').classList.add('active');
+            document.getElementById('choice-section').style.display = '';
+            document.getElementById('sql-section').style.display = 'none';
+        } else {
+            document.querySelector('.nav-tab:last-child').classList.add('active');
+            document.getElementById('choice-section').style.display = 'none';
+            document.getElementById('sql-section').style.display = '';
+            document.getElementById('sql-db-view').style.display = '';
+            document.getElementById('sql-set-view').classList.remove('active');
+            document.getElementById('sql-quiz-view').classList.remove('active');
+        }
+    }
+
+    function showSqlSets(db) {
+        currentSqlDb = db;
+        document.getElementById('sql-db-view').style.display = 'none';
+        document.getElementById('sql-set-view').classList.add('active');
+        document.getElementById('sql-quiz-view').classList.remove('active');
+        document.getElementById('sql-set-title').innerText = db === 'petstore' ? '🐾 petstore 套题' : '🎓 studentdb 套题';
+        const sets = sqlData[db].sets;
+        let html = '';
+        Object.keys(sets).forEach(key => {
+            html += '<div class="sql-set-card" onclick="showSqlQuestions(\'' + db + '\',\'' + key + '\')"><div style="font-weight:bold;font-size:16px;color:#2c3e50;">' + key + '</div><div style="font-size:13px;color:#7f8c8d;margin-top:4px;">' + sets[key].title + ' · ' + sets[key].questions.length + ' 题</div></div>';
+        });
+        document.getElementById('sql-set-grid').innerHTML = html;
+    }
+
+    function backToSqlDb() {
+        document.getElementById('sql-set-view').classList.remove('active');
+        document.getElementById('sql-quiz-view').classList.remove('active');
+        document.getElementById('sql-db-view').style.display = '';
+    }
+
+    function showSqlQuestions(db, setId) {
+        document.getElementById('sql-set-view').classList.remove('active');
+        document.getElementById('sql-quiz-view').classList.add('active');
+        document.getElementById('sql-quiz-title').innerText = setId;
+        document.getElementById('sql-tables-box').innerHTML = '<h3>📋 表结构</h3><pre>' + sqlData[db].tables + '</pre>';
+        const questions = sqlData[db].sets[setId].questions;
+        let html = '';
+        questions.forEach((item, idx) => {
+            html += '<div class="sql-question"><span class="q-num">第 ' + (idx+1) + ' 题</span><div class="q-text">' + item.q.replace(/\n/g,'<br>') + '</div><textarea class="sql-textarea" id="sql-ta-' + idx + '" placeholder="在此输入你的 SQL 语句..."></textarea><button class="sql-toggle-btn" id="sql-btn-' + idx + '" onclick="toggleAnswer(' + idx + ')">👁 查看答案</button><div class="sql-answer-box" id="sql-ans-' + idx + '"><pre>' + escapeHtml(item.a) + '</pre></div></div>';
+        });
+        document.getElementById('sql-questions-list').innerHTML = html;
+        window.scrollTo(0, 0);
+    }
+
+    function backToSqlSets() {
+        document.getElementById('sql-quiz-view').classList.remove('active');
+        document.getElementById('sql-set-view').classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function toggleAnswer(idx) {
+        const box = document.getElementById('sql-ans-' + idx);
+        const btn = document.getElementById('sql-btn-' + idx);
+        if (box.style.display === 'block') {
+            box.style.display = 'none';
+            btn.innerText = '👁 查看答案';
+            btn.classList.remove('showing');
+        } else {
+            box.style.display = 'block';
+            btn.innerText = '🙈 隐藏答案';
+            btn.classList.add('showing');
+        }
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    const sqlData = {
+    petstore: {
+        tables: 'account(userid, fullname, password, sex, address, email, phone) — 6位用户\ncategory(catid, catname, cades) — 5个类别:01鱼,02狗,03爬行动物,04花,05鸟\nproduct(productid, catid, name, descn, listprice, unitcost, qty) — 16种商品\norders(orderid, userid, orderdate, totalprice, status) — 5笔订单\nlineitem(orderid, itemid, quantity, unitprice) — 7条订单明细',
+        sets: {
+            '2.2.1': { title: '外键与基本查询', questions: [
+                {q:'为product表中"catid"列创建外键，以保证当要删除category表中"catid"列的值时，如果product表中的"catid"列还有记录时，则拒绝对category表的删除操作。', a:'ALTER TABLE product ADD CONSTRAINT fk_product_catid\nFOREIGN KEY (catid) REFERENCES category(catid);'},
+                {q:'为lineitem表中的"orderid"列创建外键，以保证当要删除orders表中的订单号时，会自动删除lineitem表中匹配的行。', a:'ALTER TABLE lineitem ADD CONSTRAINT fk_lineitem_orderid\nFOREIGN KEY (orderid) REFERENCES orders(orderid)\nON DELETE CASCADE;'},
+                {q:'为account表中的"sex"列添加CHECK完整性约束，以保证性别只能包含"男"或"女"。', a:'ALTER TABLE account ADD CONSTRAINT chk_sex\nCHECK (sex IN (\'男\',\'女\'));'},
+                {q:'当新从澳大利亚购进一批天使鱼，数量为50尾，进价为15元/尾，请按库存与新进商品的平均值调整商品的成本价格(unitcost)。该商品将以高出成本价格20%的市场价格(listprice)卖出，请调整商品的市场价格和数量。\n（假设天使鱼已存在于product表中，productid为\'FI-AF-01\'）', a:'UPDATE product\nSET unitcost = (unitcost*qty + 15*50) / (qty+50),\n    listprice = ((unitcost*qty + 15*50)/(qty+50)) * 1.2,\n    qty = qty + 50\nWHERE name = \'天使鱼\';'},
+                {q:'将用户名为"u0004"的所有订购信息删除，包括订单表和订单明细表的信息。', a:'DELETE FROM lineitem WHERE orderid IN\n(SELECT orderid FROM orders WHERE userid=\'u0004\');\nDELETE FROM orders WHERE userid=\'u0004\';'},
+                {q:'查询account表中客户的姓名、地址和电话，显示的列标题要求显示"姓名"、"地址"、"电话"。', a:'SELECT fullname AS 姓名, address AS 地址, phone AS 电话\nFROM account;'},
+                {q:'显示orders表中单笔订单金额大于等于200元的用户号、订单总价和订单状态。', a:'SELECT userid, totalprice, status\nFROM orders\nWHERE totalprice >= 200;'},
+                {q:'统计2020年5月以前订购了商品的女客户的姓名和订单总价。', a:'SELECT a.fullname, o.totalprice\nFROM account a\nINNER JOIN orders o ON a.userid = o.userid\nWHERE a.sex = \'女\'\n  AND o.orderdate < \'2020-05-01\';'},
+                {q:'显示orders表中的单笔最高成交额和最低成交额。', a:'SELECT MAX(totalprice) AS 最高成交额,\n       MIN(totalprice) AS 最低成交额\nFROM orders;'}
+            ]},
+            '2.2.2': { title: '多表查询与函数', questions: [
+                {q:'为orders表中的"userid"列创建外键，以保证当要删除和更新account表中的数据时，只要orders表中还有该客户的订单，则拒绝account表进行删除和更新操作。', a:'ALTER TABLE orders ADD CONSTRAINT fk_orders_userid\nFOREIGN KEY (userid) REFERENCES account(userid);'},
+                {q:'当订单号为"20130411"的订单已经发货，请将该订单的状态修改为"1"。', a:'UPDATE orders SET status = \'1\'\nWHERE orderid = \'20130411\';'},
+                {q:'查询lineitem表中的商品号和单价，要求消除重复行。', a:'SELECT DISTINCT itemid, unitprice\nFROM lineitem;'},
+                {q:'查询account表中客户的姓名和性别，要求性别为"男"时显示1，为"女"时显示0。', a:'SELECT fullname,\n  CASE sex\n    WHEN \'男\' THEN 1\n    WHEN \'女\' THEN 0\n  END AS sex\nFROM account;'},
+                {q:'查询product表中商品号倒数第4个标号为"W"的商品信息。', a:'SELECT * FROM product\nWHERE SUBSTRING(productid,\n  CHAR_LENGTH(productid)-3, 1) = \'W\';'},
+                {q:'查询lineitem表中的订单号、商品名称和购买数量。', a:'SELECT l.orderid, p.name AS 商品名称,\n       l.quantity AS 购买数量\nFROM lineitem l\nJOIN product p ON l.itemid = p.productid;'},
+                {q:'查询"刘晓和"的基本情况和订单情况。', a:'SELECT a.*, o.*\nFROM account a\nJOIN orders o ON a.userid = o.userid\nWHERE a.fullname = \'刘晓和\';'},
+                {q:'统计客户总数。', a:'SELECT COUNT(*) AS 客户总数\nFROM account;'},
+                {q:'按商品类别统计各类商品总数、平均成本单价(unitcost)。', a:'SELECT catid,\n  COUNT(*) AS 商品总数,\n  AVG(unitcost) AS 平均成本单价\nFROM product\nGROUP BY catid;'},
+                {q:'将orders表按用户从小到大排序，用户号相同的按订单日期从大到小排序。', a:'SELECT * FROM orders\nORDER BY userid ASC, orderdate DESC;'}
+            ]},
+            '2.2.3': { title: '高级查询与子查询', questions: [
+                {q:'为lineitem表中的"itemid"列创建外键，以保证当要删除和更新product表中的商品号时，会自动删除或更新lineitem表中匹配的行。', a:'ALTER TABLE lineitem ADD CONSTRAINT fk_lineitem_itemid\nFOREIGN KEY (itemid) REFERENCES product(productid)\nON DELETE CASCADE ON UPDATE CASCADE;'},
+                {q:'计算lineitem表中每条记录的商品金额。', a:'SELECT orderid, itemid,\n  quantity * unitprice AS 商品金额\nFROM lineitem;'},
+                {q:'查询product表中的商品名和档次。档次按价格(unitcost)划分，1000元以下显示为"低价商品"，1000元到2000元之间显示为"中档商品"，2000元及以上显示为"高档商品"。', a:'SELECT name,\n  CASE\n    WHEN unitcost < 1000 THEN \'低价商品\'\n    WHEN unitcost BETWEEN 1000 AND 2000\n      THEN \'中档商品\'\n    ELSE \'高档商品\'\n  END AS 档次\nFROM product;'},
+                {q:'查询account表中女客户的姓名、地址和电话，显示的列标题要求用中文"姓名"、"地址"、"电话"表示。', a:'SELECT fullname AS 姓名,\n  address AS 地址, phone AS 电话\nFROM account\nWHERE sex = \'女\';'},
+                {q:'查询orders表中订单总价在200~500元区间（包含200和500）的订单信息。', a:'SELECT * FROM orders\nWHERE totalprice BETWEEN 200 AND 500;'},
+                {q:'显示orders表中单笔订单金额大于等于300元的用户名、订单总价。', a:'SELECT a.fullname AS 用户名,\n  o.totalprice AS 订单总价\nFROM account a\nJOIN orders o ON a.userid = o.userid\nWHERE o.totalprice >= 300;'},
+                {q:'计算orders表中的成交总额。', a:'SELECT SUM(totalprice) AS 成交总额\nFROM orders;'},
+                {q:'按性别统计客户人数。', a:'SELECT sex, COUNT(*) AS 客户人数\nFROM account\nGROUP BY sex;'},
+                {q:'显示lineitem表中商品的购买总数量超过2件的商品号和购买总数量，并按购买数量从小到大排序。', a:'SELECT itemid AS 商品号,\n  SUM(quantity) AS 购买总数量\nFROM lineitem\nGROUP BY itemid\nHAVING SUM(quantity) > 2\nORDER BY SUM(quantity) ASC;'},
+                {q:'当订单号为"20130411"的订单已经发货后，根据该订单的订单明细表修改商品表的库存。', a:'UPDATE product p\nINNER JOIN lineitem l\n  ON p.productid = l.itemid\nSET p.qty = p.qty - l.quantity\nWHERE l.orderid = \'20130411\';'}
+            ]}
+        }
+    },
+    studentdb: {
+        tables: 'students(student_id, name, age, grade) — 4名学生\ncourses(course_id, course_name, credit_hours) — 3门课程\n  101:Mathematics(3学分) 102:History(4学分) 103:Physics(3学分)\ngrades(student_id, course_id, grade) — 8条成绩记录',
+        sets: {
+            '2.2.4': { title: '外键与聚合查询', questions: [
+                {q:'建立数据完整性约束。为成绩表(grades)创建外键，其学生编号去引用学生表(students)中的学生编号，其课程编号去引用课程表(courses)中的课程编号。', a:'ALTER TABLE grades\nADD CONSTRAINT fk_grades_student\n  FOREIGN KEY (student_id)\n  REFERENCES students(student_id);\nALTER TABLE grades\nADD CONSTRAINT fk_grades_course\n  FOREIGN KEY (course_id)\n  REFERENCES courses(course_id);'},
+                {q:'查询每位学生的平均成绩，要求显示学生编号和平均成绩。', a:'SELECT student_id, AVG(grade) AS 平均成绩\nFROM grades\nGROUP BY student_id;'},
+                {q:'查询选修了至少一门课程的学生数量。', a:'SELECT COUNT(DISTINCT student_id) AS 选修学生数量\nFROM grades;'},
+                {q:'查询所有选修了课程编号为\'101\'的学生姓名。', a:'SELECT s.name FROM students s\nJOIN grades g ON s.student_id = g.student_id\nWHERE g.course_id = \'101\';'},
+                {q:'查询每门课程的平均成绩，要求显示课程名称和对应的平均成绩。', a:'SELECT c.course_name, AVG(g.grade) AS 平均成绩\nFROM courses c\nJOIN grades g ON c.course_id = g.course_id\nGROUP BY c.course_name;'},
+                {q:'查询选修了课程编号为\'103\'的课程且成绩在90分以上的学生姓名和成绩。', a:'SELECT s.name, g.grade\nFROM students s\nJOIN grades g ON s.student_id = g.student_id\nWHERE g.course_id = \'103\'\n  AND g.grade > 90;'},
+                {q:'查询每门课程的最高成绩，要求显示课程名称和对应的最高成绩。', a:'SELECT c.course_name, MAX(g.grade) AS 最高成绩\nFROM courses c\nJOIN grades g ON c.course_id = g.course_id\nGROUP BY c.course_name;'},
+                {q:'查询没有选修任何课程的学生姓名。', a:'SELECT name FROM students\nWHERE student_id NOT IN\n  (SELECT DISTINCT student_id FROM grades);'},
+                {q:'查询每门课程的平均学分，要求显示课程编号和平均学分。', a:'SELECT course_id, AVG(credit_hours) AS 平均学分\nFROM courses\nGROUP BY course_id;'},
+                {q:'查询每门课程的选修学生中成绩最低的学生姓名、课程名称和成绩。', a:'SELECT s.name, c.course_name, g.grade\nFROM students s\nJOIN grades g ON s.student_id = g.student_id\nJOIN courses c ON g.course_id = c.course_id\nWHERE g.grade = (\n  SELECT MIN(g2.grade) FROM grades g2\n  WHERE g2.course_id = g.course_id\n);'}
+            ]},
+            '2.2.5': { title: '子查询与高级过滤', questions: [
+                {q:'建立数据完整性约束。为成绩表(grades)创建外键，其学生编号去引用学生表(students)中的学生编号，其课程编号去引用课程表(courses)中的课程编号。', a:'ALTER TABLE grades\nADD CONSTRAINT fk_grades_student\n  FOREIGN KEY (student_id)\n  REFERENCES students(student_id);\nALTER TABLE grades\nADD CONSTRAINT fk_grades_course\n  FOREIGN KEY (course_id)\n  REFERENCES courses(course_id);'},
+                {q:'查询年龄在20岁以上的学生的姓名和年龄。', a:'SELECT name, age FROM students\nWHERE age > 20;'},
+                {q:'查询每个等级所对应的学生数量，要求显示等级及对应等级的学生数量。', a:'SELECT grade, COUNT(*) AS 学生数量\nFROM students\nGROUP BY grade;'},
+                {q:'查询选修了Mathematics课程的学生姓名和年龄，要求按年龄降序排序。', a:'SELECT s.name, s.age FROM students s\nJOIN grades g ON s.student_id = g.student_id\nJOIN courses c ON g.course_id = c.course_id\nWHERE c.course_name = \'Mathematics\'\nORDER BY s.age DESC;'},
+                {q:'查询每位学生的总学分（已选修课程的总学分），要求输出学生名字和对应的总学分。', a:'SELECT s.name, SUM(c.credit_hours) AS 总学分\nFROM students s\nJOIN grades g ON s.student_id = g.student_id\nJOIN courses c ON g.course_id = c.course_id\nGROUP BY s.name;'},
+                {q:'查询没有选修Physics课程的学生姓名和年龄。', a:'SELECT name, age FROM students\nWHERE student_id NOT IN (\n  SELECT g.student_id FROM grades g\n  JOIN courses c ON g.course_id = c.course_id\n  WHERE c.course_name = \'Physics\'\n);'},
+                {q:'查询选修了至少一门课程的学生数量。', a:'SELECT COUNT(DISTINCT student_id) AS 选修学生数量\nFROM grades;'},
+                {q:'查询每门课程的选修学生数量，输出课程编号和对应的学生数量。', a:'SELECT course_id, COUNT(*) AS 学生数量\nFROM grades\nGROUP BY course_id;'},
+                {q:'查询每门课程的平均学分，要求显示课程编号和平均学分。', a:'SELECT course_id, AVG(credit_hours) AS 平均学分\nFROM courses\nGROUP BY course_id;'},
+                {q:'查询选修了课程编号为\'102\'的课程但没有选修课程编号为\'103\'的课程的学生姓名。', a:'SELECT name FROM students\nWHERE student_id IN (\n  SELECT student_id FROM grades\n  WHERE course_id = \'102\'\n)\nAND student_id NOT IN (\n  SELECT student_id FROM grades\n  WHERE course_id = \'103\'\n);'}
+            ]}
+        }
+    }
+};
 </script>
 </body>
 </html>
