@@ -1,0 +1,7 @@
+{
+  "name": "my-quiz",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev"
+  }
+}

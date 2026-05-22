@@ -131,6 +131,70 @@
     body.eye-care .sql-answer-box pre { color: #7ee787; }
     body.eye-care .sql-tables-box { background: #1f2a36; border-color: #444c56; }
     body.eye-care .sql-tables-box pre { color: #c8d1d9; }
+
+    /* ======== 🤖 AI 批改样式 ======== */
+    .sql-btn-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .sql-ai-btn { padding: 6px 14px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 5px; font-size: 13px; font-weight: bold; }
+    .sql-ai-btn:hover { opacity: 0.85; }
+    .sql-ai-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .sql-toggle-btn { padding: 6px 14px; background: #e67e22; color: white; border: none; border-radius: 5px; font-size: 13px; font-weight: bold; }
+    .sql-toggle-btn:hover { background: #d35400; }
+    .sql-toggle-btn.showing { background: #95a5a6; }
+    .sql-toggle-btn.showing:hover { background: #7f8c8d; }
+
+    .sql-ai-feedback { margin-top: 10px; padding: 14px; border-radius: 8px; display: none; }
+    .sql-ai-feedback.grading { display: block; background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; animation: pulse 1.5s infinite; }
+    .sql-ai-feedback.done { display: block; }
+    .sql-ai-feedback.score-5 { background: #d4edda; border: 1px solid #28a745; color: #155724; }
+    .sql-ai-feedback.score-4 { background: #e8f5e9; border: 1px solid #66bb6a; color: #2e7d32; }
+    .sql-ai-feedback.score-3 { background: #fef3c7; border: 1px solid #f59e0b; color: #92400e; }
+    .sql-ai-feedback.score-2 { background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; }
+    .sql-ai-feedback.score-1 { background: #fce4ec; border: 1px solid #e91e63; color: #880e4f; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+
+    .star-rating { font-size: 22px; letter-spacing: 2px; margin-bottom: 4px; }
+    .star-rating .star-on { color: #f59e0b; }
+    .star-rating .star-off { color: #d1d5db; }
+
+    .sql-ai-feedback .fb-label { font-weight: bold; display: block; margin-top: 8px; margin-bottom: 2px; }
+    .sql-ai-feedback .fb-text { white-space: pre-wrap; font-size: 14px; line-height: 1.6; }
+
+    .knowledge-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .knowledge-tag { display: inline-block; padding: 3px 10px; background: #dbeafe; color: #1e40af; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    body.eye-care .knowledge-tag { background: #1e3a5f; color: #93c5fd; }
+
+    body.eye-care .sql-ai-feedback.grading { background: #3d2e0a; border-color: #b45309; color: #fcd34d; }
+    body.eye-care .sql-ai-feedback.score-5 { background: #1a332a; border-color: #2d5a3d; color: #7ee787; }
+    body.eye-care .sql-ai-feedback.score-4 { background: #1c3026; border-color: #3d6b42; color: #8bc34a; }
+    body.eye-care .sql-ai-feedback.score-3 { background: #3d2e0a; border-color: #b45309; color: #fcd34d; }
+    body.eye-care .sql-ai-feedback.score-2 { background: #3d1515; border-color: #991b1b; color: #fca5a5; }
+    body.eye-care .sql-ai-feedback.score-1 { background: #3d1520; border-color: #9b1d4a; color: #f8a5c2; }
+    body.eye-care .sql-ai-btn { background: linear-gradient(135deg, #5a6fd6, #6a3d99); }
+    body.eye-care .sql-ai-btn:disabled { opacity: 0.4; }
+
+    /* ======== 📊 SQL 错题本 & 知识点汇总 ======== */
+    .sql-extra-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+    .sql-extra-card { background: white; border-radius: 10px; padding: 16px; text-align: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: transform 0.2s; }
+    .sql-extra-card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+    .sql-extra-card .extra-icon { font-size: 28px; margin-bottom: 6px; }
+    .sql-extra-card .extra-name { font-size: 15px; font-weight: bold; color: #2c3e50; }
+    .sql-extra-card .extra-count { font-size: 12px; color: #7f8c8d; margin-top: 2px; }
+    body.eye-care .sql-extra-card { background: #24292e; border-color: #444c56; }
+    body.eye-care .sql-extra-card .extra-name { color: #e1e4e8; }
+
+    .sql-error-item { background: white; border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border-left: 4px solid #e74c3c; }
+    .sql-error-item .err-meta { font-size: 13px; color: #7f8c8d; margin-bottom: 6px; }
+    .sql-error-item .err-q { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+    .sql-error-item .err-answer { font-size: 13px; color: #e74c3c; margin-bottom: 4px; }
+    .sql-error-item .err-fix { font-size: 13px; color: #27ae60; }
+    body.eye-care .sql-error-item { background: #24292e; border-color: #444c56; border-left-color: #e74c3c; }
+
+    .sql-knowledge-group { background: white; border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+    .sql-knowledge-group .kg-name { font-size: 16px; font-weight: bold; color: #2c3e50; margin-bottom: 4px; }
+    .sql-knowledge-group .kg-count { font-size: 13px; color: #e67e22; margin-bottom: 8px; }
+    .sql-knowledge-group .kg-questions { font-size: 13px; color: #7f8c8d; line-height: 1.8; }
+    body.eye-care .sql-knowledge-group { background: #24292e; border-color: #444c56; }
+    body.eye-care .sql-knowledge-group .kg-name { color: #e1e4e8; }
 </style>
 <script src="data.js"></script> 
 </head>
@@ -219,6 +283,7 @@
                 <div class="db-count">2 套题 · 20 题</div>
             </div>
         </div>
+        <div class="sql-extra-cards" id="sql-extra-cards"></div>
     </div>
 
     <div id="sql-set-view" class="view">
@@ -238,6 +303,25 @@
         </div>
         <div class="sql-tables-box" id="sql-tables-box"></div>
         <div id="sql-questions-list"></div>
+    </div>
+
+    <div id="sql-error-view" class="view">
+        <div class="quiz-header">
+            <button class="back-btn" onclick="backFromErrorBook()">⬅ 返回主页</button>
+            <div class="quiz-title">📖 SQL 错题本</div>
+            <div style="width:70px;"></div>
+        </div>
+        <div id="sql-error-list"></div>
+        <div id="sql-error-empty" style="display:none; text-align:center; padding:40px; color:#7f8c8d;">🎉 没有错题，继续保持！</div>
+    </div>
+
+    <div id="sql-knowledge-view" class="view">
+        <div class="quiz-header">
+            <button class="back-btn" onclick="backFromKnowledge()">⬅ 返回主页</button>
+            <div class="quiz-title">📊 薄弱知识点汇总</div>
+            <div style="width:70px;"></div>
+        </div>
+        <div id="sql-knowledge-list"></div>
     </div>
 
 </div><!-- /#sql-section -->
@@ -540,6 +624,9 @@
             document.getElementById('sql-db-view').style.display = '';
             document.getElementById('sql-set-view').classList.remove('active');
             document.getElementById('sql-quiz-view').classList.remove('active');
+            document.getElementById('sql-error-view').classList.remove('active');
+            document.getElementById('sql-knowledge-view').classList.remove('active');
+            renderExtraCards();
         }
     }
 
@@ -561,9 +648,12 @@
         document.getElementById('sql-set-view').classList.remove('active');
         document.getElementById('sql-quiz-view').classList.remove('active');
         document.getElementById('sql-db-view').style.display = '';
+        renderExtraCards();
     }
 
     function showSqlQuestions(db, setId) {
+        currentSqlDb = db;
+        currentSqlSet = setId;
         document.getElementById('sql-set-view').classList.remove('active');
         document.getElementById('sql-quiz-view').classList.add('active');
         document.getElementById('sql-quiz-title').innerText = setId;
@@ -571,7 +661,7 @@
         const questions = sqlData[db].sets[setId].questions;
         let html = '';
         questions.forEach((item, idx) => {
-            html += '<div class="sql-question"><span class="q-num">第 ' + (idx+1) + ' 题</span><div class="q-text">' + item.q.replace(/\n/g,'<br>') + '</div><textarea class="sql-textarea" id="sql-ta-' + idx + '" placeholder="在此输入你的 SQL 语句..."></textarea><button class="sql-toggle-btn" id="sql-btn-' + idx + '" onclick="toggleAnswer(' + idx + ')">👁 查看答案</button><div class="sql-answer-box" id="sql-ans-' + idx + '"><pre>' + escapeHtml(item.a) + '</pre></div></div>';
+            html += '<div class="sql-question"><span class="q-num">第 ' + (idx+1) + ' 题</span><div class="q-text">' + item.q.replace(/\n/g,'<br>') + '</div><textarea class="sql-textarea" id="sql-ta-' + idx + '" placeholder="在此输入你的 SQL 语句..."></textarea><div class="sql-btn-row"><button class="sql-toggle-btn" id="sql-btn-' + idx + '" onclick="toggleAnswer(' + idx + ')">👁 查看答案</button><button class="sql-ai-btn" id="sql-ai-btn-' + idx + '" onclick="gradeSql(' + idx + ')">🤖 AI 批改</button></div><div class="sql-answer-box" id="sql-ans-' + idx + '"><pre>' + escapeHtml(item.a) + '</pre></div><div class="sql-ai-feedback" id="sql-ai-fb-' + idx + '"></div></div>';
         });
         document.getElementById('sql-questions-list').innerHTML = html;
         window.scrollTo(0, 0);
@@ -599,6 +689,165 @@
 
     function escapeHtml(str) {
         return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ======== 🤖 AI 批改 ========
+    let sqlErrors = JSON.parse(localStorage.getItem('sqlErrors')) || [];
+
+    function saveSqlErrors() { localStorage.setItem('sqlErrors', JSON.stringify(sqlErrors)); }
+
+    function renderExtraCards() {
+        const container = document.getElementById('sql-extra-cards');
+        if (!container) return;
+        let html = '';
+        if (sqlErrors.length > 0) {
+            const tagMap = {};
+            sqlErrors.forEach(e => { (e.knowledge||[]).forEach(t => { tagMap[t] = (tagMap[t]||0) + 1; }); });
+            const tagCount = Object.keys(tagMap).length;
+            html += '<div class="sql-extra-card" onclick="showErrorBook()"><div class="extra-icon">📖</div><div class="extra-name">SQL 错题本</div><div class="extra-count">' + sqlErrors.length + ' 道错题</div></div>';
+            html += '<div class="sql-extra-card" onclick="showKnowledgeSummary()"><div class="extra-icon">📊</div><div class="extra-name">薄弱知识点</div><div class="extra-count">' + tagCount + ' 个知识点</div></div>';
+        } else {
+            html += '<div style="grid-column:1/-1; text-align:center; color:#7f8c8d; font-size:14px; padding:10px;">👆 用 AI 批改后，错题和薄弱知识点会出现在这里</div>';
+        }
+        container.innerHTML = html;
+    }
+
+    function showErrorBook() {
+        document.getElementById('sql-db-view').style.display = 'none';
+        document.getElementById('sql-error-view').classList.add('active');
+        if (sqlErrors.length === 0) {
+            document.getElementById('sql-error-list').innerHTML = '';
+            document.getElementById('sql-error-empty').style.display = 'block';
+            return;
+        }
+        document.getElementById('sql-error-empty').style.display = 'none';
+        let html = '';
+        sqlErrors.slice().reverse().forEach((e, i) => {
+            const stars = '⭐'.repeat(e.score) + '☆'.repeat(5 - e.score);
+            html += '<div class="sql-error-item"><div class="err-meta">' + e.setId + ' 第' + (e.qIdx+1) + '题 | ' + stars + ' ' + e.score + '/5 | ' + new Date(e.time).toLocaleString() + '</div><div class="err-q">' + e.question.replace(/\n/g,'<br>') + '</div><div class="err-answer">❌ 我的答案：<code>' + escapeHtml(e.myAnswer.slice(0,150)) + '</code></div><div style="font-size:13px;color:#e67e22;margin-bottom:4px;">💡 ' + e.feedback + '</div><div class="err-fix" style="margin-bottom:6px;">✅ 建议：' + e.fix + '</div>';
+            if (e.knowledge && e.knowledge.length) {
+                html += '<div class="knowledge-tags">' + e.knowledge.map(k => '<span class="knowledge-tag">' + k + '</span>').join('') + '</div>';
+            }
+            html += '</div>';
+        });
+        document.getElementById('sql-error-list').innerHTML = html;
+        window.scrollTo(0, 0);
+    }
+
+    function backFromErrorBook() {
+        document.getElementById('sql-error-view').classList.remove('active');
+        document.getElementById('sql-db-view').style.display = '';
+        renderExtraCards();
+        window.scrollTo(0, 0);
+    }
+
+    function showKnowledgeSummary() {
+        document.getElementById('sql-db-view').style.display = 'none';
+        document.getElementById('sql-knowledge-view').classList.add('active');
+        const tagMap = {};
+        sqlErrors.forEach(e => {
+            (e.knowledge||[]).forEach(t => {
+                if (!tagMap[t]) tagMap[t] = [];
+                tagMap[t].push(e);
+            });
+        });
+        const sorted = Object.entries(tagMap).sort((a,b) => b[1].length - a[1].length);
+        let html = '';
+        sorted.forEach(([tag, errors]) => {
+            html += '<div class="sql-knowledge-group"><div class="kg-name">🏷 ' + tag + '</div><div class="kg-count">出错 <strong>' + errors.length + '</strong> 次</div><div class="kg-questions">' + errors.map(e => e.setId + ' 第' + (e.qIdx+1) + '题').join('&nbsp;|&nbsp;') + '</div></div>';
+        });
+        if (sorted.length === 0) {
+            html = '<div style="text-align:center; padding:40px; color:#7f8c8d;">暂无数据，AI 批改后会自动汇总</div>';
+        }
+        document.getElementById('sql-knowledge-list').innerHTML = html;
+        window.scrollTo(0, 0);
+    }
+
+    function backFromKnowledge() {
+        document.getElementById('sql-knowledge-view').classList.remove('active');
+        document.getElementById('sql-db-view').style.display = '';
+        renderExtraCards();
+        window.scrollTo(0, 0);
+    }
+
+    async function gradeSql(idx) {
+        const btn = document.getElementById('sql-ai-btn-' + idx);
+        const fb = document.getElementById('sql-ai-fb-' + idx);
+        const ta = document.getElementById('sql-ta-' + idx);
+        const userAnswer = ta.value.trim();
+
+        if (!userAnswer) { alert('请先输入 SQL 语句再批改'); return; }
+
+        btn.disabled = true;
+        btn.innerText = '⏳ 批改中...';
+        fb.className = 'sql-ai-feedback grading';
+        fb.innerHTML = '🤖 DeepSeek 正在批改你的 SQL 语句，请稍候...';
+        window.scrollTo(0, fb.getBoundingClientRect().top + window.scrollY - 200);
+
+        try {
+            const response = await fetch('/api/grade-sql', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    question: sqlData[currentSqlDb].sets[currentSqlSet].questions[idx].q,
+                    standard_answer: sqlData[currentSqlDb].sets[currentSqlSet].questions[idx].a,
+                    user_answer: userAnswer
+                })
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                if (response.status === 404) {
+                    throw new Error('API 未找到（404）。此功能需要将项目部署到 Vercel 才能使用。');
+                }
+                throw new Error(errData.error || '服务器错误: ' + response.status);
+            }
+
+            const result = await response.json();
+            const score = parseInt(result.score) || 3;
+            const scoreClass = 'score-' + score;
+            const stars = '⭐'.repeat(score) + '☆'.repeat(5 - score);
+
+            fb.className = 'sql-ai-feedback done ' + scoreClass;
+            let fbHtml = '<div class="star-rating">' + stars + ' <strong>' + score + '/5</strong></div>';
+            fbHtml += '<span class="fb-label">📝 评语：</span><span class="fb-text">' + (result.feedback || '') + '</span>';
+            if (!result.correct && result.fix) {
+                fbHtml += '<span class="fb-label">🔧 修改建议：</span><span class="fb-text">' + result.fix + '</span>';
+            }
+            if (result.knowledge && result.knowledge.length) {
+                fbHtml += '<span class="fb-label">🏷 知识点：</span><div class="knowledge-tags">' + result.knowledge.map(k => '<span class="knowledge-tag">' + k + '</span>').join('') + '</div>';
+            }
+            fb.innerHTML = fbHtml;
+
+            // Save to error book if score < 4 (not perfect)
+            if (score < 4) {
+                const existingIdx = sqlErrors.findIndex(e => e.setId === currentSqlSet && e.qIdx === idx);
+                const entry = {
+                    setId: currentSqlSet,
+                    qIdx: idx,
+                    question: sqlData[currentSqlDb].sets[currentSqlSet].questions[idx].q,
+                    myAnswer: userAnswer,
+                    score: score,
+                    feedback: result.feedback || '',
+                    fix: result.fix || '',
+                    knowledge: result.knowledge || [],
+                    time: new Date().toISOString()
+                };
+                if (existingIdx >= 0) { sqlErrors[existingIdx] = entry; }
+                else { sqlErrors.push(entry); }
+                saveSqlErrors();
+            } else {
+                // Remove from errors if was previously wrong
+                const existingIdx = sqlErrors.findIndex(e => e.setId === currentSqlSet && e.qIdx === idx);
+                if (existingIdx >= 0) { sqlErrors.splice(existingIdx, 1); saveSqlErrors(); }
+            }
+        } catch (err) {
+            fb.className = 'sql-ai-feedback done score-2';
+            fb.innerHTML = '<strong>❌ 批改失败</strong><br>' + err.message + '<br><br><small>提示：请确认项目已部署到 Vercel，且在 Vercel 项目设置中配置了 <code>DEEPSEEK_API_KEY</code> 环境变量。</small>';
+        }
+
+        btn.disabled = false;
+        btn.innerText = '🤖 AI 批改';
     }
 
     const sqlData = {
