@@ -5,9 +5,10 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN } = process.env;
-  if (!UPSTASH_REDIS_REST_URL || !UPSTASH_REDIS_REST_TOKEN) {
-    return res.status(500).json({ error: 'Upstash Redis 未配置。请在 Vercel Dashboard → Storage → 点击 Upstash → Create → Connect 到本项目。' });
+  const API_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const API_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!API_URL || !API_TOKEN) {
+    return res.status(500).json({ error: 'Redis 未配置。请在 Vercel Dashboard → Storage → 点击 Upstash → Create → Connect 到本项目。' });
   }
 
   if (req.method === 'GET') {
@@ -15,8 +16,8 @@ export default async function handler(req, res) {
     if (!syncId) return res.status(400).json({ error: '缺少 syncId 参数' });
 
     try {
-      const resp = await fetch(`${UPSTASH_REDIS_REST_URL}/get/quiz:${encodeURIComponent(syncId)}`, {
-        headers: { Authorization: `Bearer ${UPSTASH_REDIS_REST_TOKEN}` }
+      const resp = await fetch(`${API_URL}/get/quiz:${encodeURIComponent(syncId)}`, {
+        headers: { Authorization: `Bearer ${API_TOKEN}` }
       });
       if (!resp.ok) throw new Error(`Upstash responded with ${resp.status}`);
       const json = await resp.json();
@@ -31,9 +32,9 @@ export default async function handler(req, res) {
     if (!syncId || !data) return res.status(400).json({ error: '缺少 syncId 或 data' });
 
     try {
-      const resp = await fetch(`${UPSTASH_REDIS_REST_URL}/set/quiz:${encodeURIComponent(syncId)}`, {
+      const resp = await fetch(`${API_URL}/set/quiz:${encodeURIComponent(syncId)}`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${UPSTASH_REDIS_REST_TOKEN}` },
+        headers: { Authorization: `Bearer ${API_TOKEN}` },
         body: JSON.stringify({ value: JSON.stringify(data) })
       });
       if (!resp.ok) throw new Error(`Upstash responded with ${resp.status}`);
