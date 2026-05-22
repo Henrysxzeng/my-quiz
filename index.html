@@ -203,7 +203,32 @@
     .java-card .java-name { font-size: 16px; font-weight: bold; color: #2c3e50; }
     .java-card .java-desc { font-size: 13px; color: #7f8c8d; margin-top: 4px; }
     .java-code-block { background: #1e1e1e; color: #d4d4d4; border-radius: 8px; padding: 16px; margin-bottom: 15px; overflow-x: auto; font-family: 'Consolas','Courier New',monospace; font-size: 13px; line-height: 1.6; white-space: pre; }
-    .java-answer-block { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-top: 10px; display: none; overflow-x: auto; font-family: 'Consolas','Courier New',monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; color: #166534; }
+    .java-code-block .kw { color: #569cd6; font-weight: bold; }
+    .java-code-block .type { color: #4ec9b0; }
+    .java-code-block .str { color: #ce9178; }
+    .java-code-block .cmt { color: #6a9955; font-style: italic; }
+    .java-code-block .num { color: #b5cea8; }
+    .java-code-block .ann { color: #dcdcaa; }
+    .java-code-block .fix-marker { color: #f14c4c; font-weight: bold; background: rgba(241,76,76,0.15); padding: 1px 4px; border-radius: 3px; margin-right: 4px; }
+    .java-code-block .fix-line { background: rgba(241,76,76,0.08); display: inline-block; width: 100%; border-left: 3px solid #f14c4c; padding-left: 8px; margin-left: -8px; }
+    .java-answer-block { background: #1e1e1e; color: #d4d4d4; border: 1px solid #444c56; border-radius: 8px; padding: 16px; margin-top: 10px; display: none; overflow-x: auto; font-family: 'Consolas','Courier New',monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; }
+    .java-answer-block .kw { color: #569cd6; font-weight: bold; }
+    .java-answer-block .type { color: #4ec9b0; }
+    .java-answer-block .str { color: #ce9178; }
+    .java-answer-block .cmt { color: #6a9955; font-style: italic; }
+    .java-answer-block .num { color: #b5cea8; }
+    .java-answer-block .ann { color: #dcdcaa; }
+    .java-answer-block .fix-marker { color: #ff6b6b; font-weight: bold; background: rgba(255,107,107,0.2); padding: 2px 6px; border-radius: 3px; margin-right: 4px; }
+    .java-answer-block .fix-line { background: rgba(255,107,107,0.1); display: inline-block; width: 100%; border-left: 3px solid #ff6b6b; padding-left: 8px; margin-left: -8px; }
+    .java-answer-block .fix-added { color: #7ee787; }
+    .java-answer-block .fix-added-line { background: rgba(126,231,135,0.08); display: inline-block; width: 100%; border-left: 3px solid #2ea043; padding-left: 8px; margin-left: -8px; }
+    .java-answer-block .fix-added-marker { color: #2ea043; font-weight: bold; background: rgba(46,160,67,0.2); padding: 2px 6px; border-radius: 3px; margin-right: 4px; }
+    .java-fix-summary { background: #252526; border: 1px solid #444c56; border-radius: 8px; padding: 14px 18px; margin-top: 10px; display: none; }
+    .java-fix-summary h4 { color: #ff6b6b; margin: 0 0 10px 0; font-size: 15px; }
+    .java-fix-summary .fix-item { color: #d4d4d4; font-size: 13px; margin-bottom: 6px; padding: 6px 10px; background: rgba(255,107,107,0.06); border-radius: 4px; border-left: 3px solid #ff6b6b; }
+    .java-fix-summary .fix-item .fix-num { color: #ff6b6b; font-weight: bold; margin-right: 6px; }
+    .java-fix-summary .fix-item.added { border-left-color: #2ea043; background: rgba(126,231,135,0.06); }
+    .java-fix-summary .fix-item.added .fix-num { color: #2ea043; }
     .java-toggle-btn { margin-top: 8px; padding: 6px 14px; background: #6f42c1; color: white; border: none; border-radius: 5px; font-size: 13px; font-weight: bold; cursor: pointer; }
     .java-toggle-btn:hover { background: #5a3399; }
     .java-toggle-btn.showing { background: #95a5a6; }
@@ -211,7 +236,8 @@
     body.eye-care .java-card { background: #24292e; border-color: #444c56; border-left-color: #6f42c1; }
     body.eye-care .java-card .java-name { color: #e1e4e8; }
     body.eye-care .java-code-block { background: #0d1117; color: #c9d1d9; }
-    body.eye-care .java-answer-block { background: #1a332a; border-color: #2d5a3d; color: #7ee787; }
+    body.eye-care .java-answer-block { background: #0d1117; color: #c9d1d9; border-color: #444c56; }
+    body.eye-care .java-fix-summary { background: #161b22; border-color: #444c56; }
 
     /* ======== 🧪 软件测试题样式 ======== */
     .testing-category-list { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; }
@@ -790,7 +816,7 @@
             document.getElementById('testing-quiz-view').classList.remove('active');
             document.getElementById('testing-error-view').classList.remove('active');
             document.getElementById('testing-knowledge-view').classList.remove('active');
-            renderTestingExtraCards();
+            renderTestingList();
         }
     }
 
@@ -1012,6 +1038,85 @@
         btn.innerText = '🤖 AI 批改';
     }
 
+
+
+    // ======== 🎨 Java 语法高亮 ========
+    function highlightJava(code, showFixes) {
+        let fixCount = 0;
+        let fixItems = [];
+        let lines = code.split('\n');
+        let result = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+            let isFixLine = false;
+            let isAddedLine = false;
+
+            // Check for FIX comments and assign numbers
+            if (showFixes && /\/\/\s*FIX:/i.test(line)) {
+                isFixLine = true;
+                fixCount++;
+                let fixText = line.replace(/.*\/\/\s*FIX:\s*/i, '');
+                fixItems.push({num: fixCount, text: fixText, added: false});
+            }
+            // Also detect "// FIX:" without space variations
+            if (showFixes && /\/\/\s*FIX\s/i.test(line) && !isFixLine) {
+                isFixLine = true;
+                fixCount++;
+                let fixText = line.replace(/.*\/\/\s*FIX\s*/i, '');
+                fixItems.push({num: fixCount, text: fixText, added: false});
+            }
+
+            // Escape HTML first
+            let escaped = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            // Highlight FIX markers with numbers
+            if (isFixLine && showFixes) {
+                escaped = escaped.replace(/(\/\/\s*FIX:?)/gi, '<span class="fix-marker">\u2776' + fixCount + ' FIX</span>');
+            }
+
+            // Highlight Java syntax
+            // Strings (before keywords to avoid conflicts)
+            escaped = escaped.replace(/(&quot;[^&]*&quot;|"[^"]*")/g, '<span class="str">$1</span>');
+            escaped = escaped.replace(/('([^'\\]|\\.)*')/g, '<span class="str">$1</span>');
+
+            // Comments (after strings to avoid matching inside strings)
+            if (!isFixLine) {
+                escaped = escaped.replace(/(\/\/.*)/g, '<span class="cmt">$1</span>');
+            }
+            escaped = escaped.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="cmt">$1</span>');
+
+            // Annotations
+            escaped = escaped.replace(/(@\w+)/g, '<span class="ann">$1</span>');
+
+            // Java keywords
+            let keywords = ['public','class','static','void','new','return','if','else','for','while','try','catch','finally','throw','throws','import','package','this','super','extends','implements','interface','abstract','final','private','protected','break','continue','switch','case','default','do','instanceof','enum','null','true','false'];
+            keywords.forEach(kw => {
+                let re = new RegExp('\\b(' + kw + ')\\b', 'g');
+                escaped = escaped.replace(re, '<span class="kw">$1</span>');
+            });
+
+            // Java types
+            let types = ['String','int','double','float','boolean','char','long','byte','short','void','Integer','Double','Float','Boolean','Character','Long','Byte','Short','List','Map','Set','ArrayList','HashMap','Scanner','Random','System','StringBuilder','BufferedReader','InputStreamReader','Arrays','Collections','Exception','IOException','RuntimeException','NumberFormatException','Object','Map\.Entry'];
+            types.forEach(tp => {
+                let re = new RegExp('\\b(' + tp.replace('.','\\.') + ')\\b', 'g');
+                escaped = escaped.replace(re, '<span class="type">$1</span>');
+            });
+
+            // Numbers
+            escaped = escaped.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
+
+            // Wrap in fix-line class if it's a FIX line
+            if (isFixLine && showFixes) {
+                escaped = '<span class="fix-line">' + escaped + '</span>';
+            }
+
+            // Indent with spaces
+            result.push(escaped);
+        }
+
+        return { html: result.join('\n'), fixItems: fixItems };
+    }
 
     // ======== ☕ Java 调试题数据 ========
     const javaDebugData = [
@@ -1683,8 +1788,29 @@ public class DataAnalyzer {
         document.getElementById('java-list-view').style.display = 'none';
         document.getElementById('java-question-view').classList.add('active');
         document.getElementById('java-question-title').innerText = javaDebugData[idx].title;
-        document.getElementById('java-code-block').textContent = javaDebugData[idx].code;
-        document.getElementById('java-answer-block').textContent = javaDebugData[idx].answer;
+        // Syntax highlight the code
+        let codeResult = highlightJava(javaDebugData[idx].code, false);
+        document.getElementById('java-code-block').innerHTML = codeResult.html;
+        // Syntax highlight the answer with fix markers
+        let answerResult = highlightJava(javaDebugData[idx].answer, true);
+        document.getElementById('java-answer-block').innerHTML = answerResult.html;
+        // Build fix summary
+        let summaryHtml = '';
+        if (answerResult.fixItems.length > 0) {
+            summaryHtml = '<h4>🔧 修改要点（共 ' + answerResult.fixItems.length + ' 处）：</h4>';
+            answerResult.fixItems.forEach(f => {
+                summaryHtml += '<div class="fix-item"><span class="fix-num">' + f.num + '.</span>' + f.text + '</div>';
+            });
+        }
+        let summaryEl = document.getElementById('java-fix-summary');
+        if (!summaryEl) {
+            summaryEl = document.createElement('div');
+            summaryEl.id = 'java-fix-summary';
+            summaryEl.className = 'java-fix-summary';
+            document.getElementById('java-answer-block').parentNode.insertBefore(summaryEl, document.getElementById('java-answer-block').nextSibling);
+        }
+        summaryEl.innerHTML = summaryHtml;
+        summaryEl.style.display = 'none';
         document.getElementById('java-answer-block').style.display = 'none';
         document.getElementById('java-toggle-btn').innerText = '👁 查看答案';
         document.getElementById('java-toggle-btn').classList.remove('showing');
@@ -1694,12 +1820,15 @@ public class DataAnalyzer {
     function toggleJavaAnswer() {
         const box = document.getElementById('java-answer-block');
         const btn = document.getElementById('java-toggle-btn');
+        const summary = document.getElementById('java-fix-summary');
         if (box.style.display === 'block') {
             box.style.display = 'none';
+            if (summary) summary.style.display = 'none';
             btn.innerText = '👁 查看答案';
             btn.classList.remove('showing');
         } else {
             box.style.display = 'block';
+            if (summary) summary.style.display = 'block';
             btn.innerText = '🙈 隐藏答案';
             btn.classList.add('showing');
         }
