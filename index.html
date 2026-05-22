@@ -292,8 +292,32 @@
     .testing-knowledge-group .kg-questions { font-size: 13px; color: #7f8c8d; line-height: 1.8; }
     body.eye-care .testing-knowledge-group { background: #24292e; border-color: #444c56; }
     body.eye-care .testing-knowledge-group .kg-name { color: #e1e4e8; }
+
+    /* ======== 📐 UML 建模题样式 ======== */
+    .uml-list { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; }
+    .uml-group-card { background: white; border-radius: 10px; padding: 16px 20px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+    .uml-group-title { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #3498db; }
+    .uml-question-card { background: white; border-radius: 8px; padding: 14px 16px; cursor: pointer; margin-bottom: 8px; border-left: 4px solid #3498db; box-shadow: 0 1px 4px rgba(0,0,0,0.04); transition: transform 0.2s; }
+    .uml-question-card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+    .uml-question-card .uml-q-title { font-size: 15px; font-weight: bold; color: #2c3e50; }
+    .uml-question-card .uml-q-desc { font-size: 13px; color: #7f8c8d; margin-top: 4px; }
+    .uml-detail-view { }
+    .uml-requirements { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 16px; font-size: 14px; line-height: 1.8; color: #333; white-space: pre-wrap; }
+    .uml-diagram-box { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-top: 10px; display: none; overflow-x: auto; text-align: center; }
+    .uml-diagram-box svg { max-width: 100%; height: auto; }
+    .uml-toggle-btn { margin-top: 8px; padding: 8px 18px; background: #3498db; color: white; border: none; border-radius: 5px; font-size: 14px; font-weight: bold; cursor: pointer; }
+    .uml-toggle-btn:hover { background: #2980b9; }
+    .uml-toggle-btn.showing { background: #95a5a6; }
+    body.eye-care .uml-group-card { background: #24292e; border-color: #444c56; }
+    body.eye-care .uml-group-title { color: #e1e4e8; border-bottom-color: #3498db; }
+    body.eye-care .uml-question-card { background: #24292e; border-color: #444c56; border-left-color: #3498db; }
+    body.eye-care .uml-question-card .uml-q-title { color: #e1e4e8; }
+    body.eye-care .uml-requirements { background: #2f363d; border-color: #444c56; color: #e1e4e8; }
+    body.eye-care .uml-diagram-box { background: #1a1d23; border-color: #444c56; }
 </style>
 <script src="data.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:false,theme:"default",securityLevel:"loose"});</script>
 </head>
 <body>
 
@@ -302,6 +326,7 @@
     <button class="nav-tab" onclick="switchMode('sql')">💾 SQL 刷题</button>
     <button class="nav-tab" onclick="switchMode('java')">☕ Java 调试题</button>
     <button class="nav-tab" onclick="switchMode('testing')">🧪 软件测试题</button>
+    <button class="nav-tab" onclick="switchMode('uml')">📐 UML 建模题</button>
 </div>
 
 <div id="choice-section">
@@ -487,6 +512,28 @@
     </div>
 
 </div><!-- /#testing-section -->
+
+<!-- ==================== 📐 UML 建模题区 ==================== -->
+<div id="uml-section" style="display:none;">
+
+    <div id="uml-list-view">
+        <h1 style="text-align:center; color:#2c3e50;">📐 UML 建模题</h1>
+        <p style="text-align:center; color:#7f8c8d; margin-bottom:20px;">阅读题目要求，点击查看 UML 图答案（Mermaid 渲染）</p>
+        <div id="uml-list"></div>
+    </div>
+
+    <div id="uml-detail-view" class="view">
+        <div class="quiz-header">
+            <button class="back-btn" onclick="backToUmlList()">⬅ 返回题目列表</button>
+            <div class="quiz-title" id="uml-detail-title"></div>
+            <div style="width:70px;"></div>
+        </div>
+        <div class="uml-requirements" id="uml-requirements"></div>
+        <button class="uml-toggle-btn" id="uml-toggle-btn" onclick="toggleUmlAnswer()">👁 查看 UML 图答案</button>
+        <div class="uml-diagram-box" id="uml-diagram-box"><div class="mermaid" id="uml-mermaid-diagram"></div></div>
+    </div>
+
+</div><!-- /#uml-section -->
 
 <script>
     let wrongBook = JSON.parse(localStorage.getItem('myWrongBook')) || [];
@@ -787,12 +834,14 @@
             document.getElementById('sql-section').style.display = 'none';
             document.getElementById('java-section').style.display = 'none';
             document.getElementById('testing-section').style.display = 'none';
+            document.getElementById('uml-section').style.display = 'none';
         } else if (mode === 'sql') {
             document.querySelectorAll('.nav-tab')[1].classList.add('active');
             document.getElementById('choice-section').style.display = 'none';
             document.getElementById('sql-section').style.display = '';
             document.getElementById('java-section').style.display = 'none';
             document.getElementById('testing-section').style.display = 'none';
+            document.getElementById('uml-section').style.display = 'none';
             document.getElementById('sql-db-view').style.display = '';
             document.getElementById('sql-set-view').classList.remove('active');
             document.getElementById('sql-quiz-view').classList.remove('active');
@@ -804,6 +853,7 @@
             document.getElementById('choice-section').style.display = 'none';
             document.getElementById('sql-section').style.display = 'none';
             document.getElementById('testing-section').style.display = 'none';
+            document.getElementById('uml-section').style.display = 'none';
             document.getElementById('java-section').style.display = '';
             renderJavaList();
         } else if (mode === 'testing') {
@@ -811,12 +861,23 @@
             document.getElementById('choice-section').style.display = 'none';
             document.getElementById('sql-section').style.display = 'none';
             document.getElementById('java-section').style.display = 'none';
+            document.getElementById('uml-section').style.display = 'none';
             document.getElementById('testing-section').style.display = '';
             document.getElementById('testing-list-view').style.display = '';
             document.getElementById('testing-quiz-view').classList.remove('active');
             document.getElementById('testing-error-view').classList.remove('active');
             document.getElementById('testing-knowledge-view').classList.remove('active');
             renderTestingList();
+        } else if (mode === 'uml') {
+            document.querySelectorAll('.nav-tab')[4].classList.add('active');
+            document.getElementById('choice-section').style.display = 'none';
+            document.getElementById('sql-section').style.display = 'none';
+            document.getElementById('java-section').style.display = 'none';
+            document.getElementById('testing-section').style.display = 'none';
+            document.getElementById('uml-section').style.display = '';
+            document.getElementById('uml-list-view').style.display = '';
+            document.getElementById('uml-detail-view').classList.remove('active');
+            renderUmlList();
         }
     }
 
@@ -2223,6 +2284,339 @@ public class DataAnalyzer {
         document.getElementById('testing-knowledge-view').classList.remove('active');
         document.getElementById('testing-list-view').style.display = '';
         renderTestingExtraCards();
+        window.scrollTo(0, 0);
+    }
+
+
+    // ======== 📐 UML 建模题数据 ========
+    const umlData = {
+        '1.1': {
+            title: '1.1 UML 建模基础 (5题)',
+            questions: [
+                {
+                    id: '1.1.1',
+                    title: '类图 - TransactionReporting 报表系统',
+                    req: '【题目要求】\n使用 StarUML 创建 TransactionReporting 报表系统的类图(Class Diagram)。\n\n系统描述：\n1. 创建接口 Reporting 和类 Client\n2. Reporting 接口中定义 customReporting() 方法，Client 类中定义 getReporting() 方法\n3. 创建类 UserReporting，实现 Reporting 接口，并依赖 Client 类\n4. UserReporting 类中添加 getUserReporting() 方法\n5. 创建接口 ReportingAdapter，继承 UserReporting 类\n6. ReportingAdapter 接口中定义 reportAdapter() 方法\n7. 创建类 SystemReporting，实现 ReportingAdapter 接口\n   TransactionReporting 类依赖 SystemReporting 类\n8. SystemReporting 类中添加 reportSystem() 方法\n   TransactionReporting 类中添加 summeryReporting() 方法\n9. 完成上述 [1]-[4] 的设计\n10. 在 TransactionReporting 中添加 Operation1()-Operation6() 方法\n11. 保存为 111.mdj',
+                    mermaid: `classDiagram
+    class Client {
+        +customReporting()
+        +getReporting()
+    }
+    class Reporting {
+        <<interface>>
+        +customReporting()
+    }
+    class UserReporting {
+        +getUserReporting()
+    }
+    class ReportingAdapter {
+        <<interface>>
+        +reportAdapter()
+    }
+    class SystemReporting {
+        +reportSystem()
+    }
+    class TransactionReporting {
+        +summeryReporting()
+        +Operation1()
+        +Operation2()
+        +Operation3()
+        +Operation4()
+        +Operation5()
+        +Operation6()
+    }
+    Reporting <|.. UserReporting : implements
+    UserReporting --> Client : uses
+    UserReporting <|-- ReportingAdapter : extends
+    ReportingAdapter <|.. SystemReporting : implements
+    TransactionReporting --> SystemReporting : uses`
+                },
+                {
+                    id: '1.1.2',
+                    title: 'E-R 图 - 开发者项目管理系统',
+                    req: '【题目要求】\n使用 StarUML 创建 E-R 图(Entity-Relationship Diagram)。\n\n系统描述：\n实体包括：Developer(开发者)、Project(项目)、Product(产品)、Project Line(项目行)、Product Type(产品类型)\n\n关系类型：One to One(一对一)、One to Many(一对多)、Many to Many(多对多)\n\n1. 根据 [1]-[3] 创建 E-R 图\n2. [1] 和 [2] 之间的关系\n3. User 实体包含属性：Name、Email、WeChat\n4. Project 实体包含属性：Name、Git URL\n5. Product 实体包含属性：Name\n6. 保存为 112.mdj',
+                    mermaid: `erDiagram
+    Developer {
+        string Name
+        string Email
+        string WeChat
+    }
+    Project {
+        string Name
+        string Git_URL
+    }
+    Product {
+        string Name
+    }
+    ProjectLine {
+        int Quantity
+    }
+    ProductType {
+        string TypeName
+    }
+    Developer ||--o{ Project : "One to Many"
+    Project ||--|{ ProjectLine : "One to Many"
+    ProjectLine }|--|| Product : "Many to One"
+    Product }o--|| ProductType : "Many to One"`
+                },
+                {
+                    id: '1.1.3',
+                    title: '状态图 - 30状态8转换系统',
+                    req: '【题目要求】\n使用 StarUML 创建状态图(State Diagram)。\n\n系统描述：\n系统共有 30 个状态和 8 个状态转换。\n\n要求：\n1. 创建 Initial State(初始状态) 和 Final State(终止状态)\n2. 根据 [1]-[6] 创建所有 States(状态)\n3. 创建状态之间的 Transitions(转换)\n4. 保存为 113.mdj\n\n提示：使用 Composite State 来组织状态分组，合理使用子状态机。',
+                    mermaid: `stateDiagram-v2
+    [*] --> State1
+    State1 --> State2 : Transition1
+    State2 --> State3 : Transition2
+    State3 --> State4 : Transition3
+    State4 --> State5 : Transition4
+    State5 --> State6 : Transition5
+
+    state CompositeState1 {
+        [*] --> SubState1
+        SubState1 --> SubState2 : T1
+        SubState2 --> SubState3 : T2
+        SubState3 --> [*]
+    }
+
+    State6 --> CompositeState1 : Transition6
+    CompositeState1 --> State7 : Transition7
+    State7 --> [*] : Transition8`
+                },
+                {
+                    id: '1.1.4',
+                    title: '构件图 - 微服务组件架构',
+                    req: '【题目要求】\n使用 StarUML 创建构件图(Component Diagram)。\n\n系统包含以下组件：UserService、AuthService、ConfigService、DataService\n\n1. 创建接口 UserInterface，由 UserService 实现\n   UserInterface 被 UserService 依赖使用\n2. 创建接口 AuthInterface，由 AuthService 实现\n   AuthInterface 被 UserService 依赖使用\n3. 创建接口 ConfigInterface，由 ConfigService 实现\n   ConfigInterface 被 UserService 依赖使用\n4. 创建接口 DataInterface，由 DataService 实现\n   DataInterface 被 UserService 依赖使用\n5. 保存为 114.mdj',
+                    mermaid: `graph TB
+    UserInterface([UserInterface]) -.->|realize| UserService[UserService]
+    AuthInterface([AuthInterface]) -.->|realize| AuthService[AuthService]
+    ConfigInterface([ConfigInterface]) -.->|realize| ConfigService[ConfigService]
+    DataInterface([DataInterface]) -.->|realize| DataService[DataService]
+
+    UserService -->|uses| AuthInterface
+    UserService -->|uses| ConfigInterface
+    UserService -->|uses| DataInterface
+
+    style UserInterface fill:#e1f5fe,stroke:#0288d1
+    style AuthInterface fill:#e1f5fe,stroke:#0288d1
+    style ConfigInterface fill:#e1f5fe,stroke:#0288d1
+    style DataInterface fill:#e1f5fe,stroke:#0288d1
+    style UserService fill:#fff3e0,stroke:#f57c00
+    style AuthService fill:#fff3e0,stroke:#f57c00
+    style ConfigService fill:#fff3e0,stroke:#f57c00
+    style DataService fill:#fff3e0,stroke:#f57c00`
+                },
+                {
+                    id: '1.1.5',
+                    title: '类图 - Abstract Factory 抽象工厂模式',
+                    req: '【题目要求】\n使用 StarUML 创建 Abstract Factory Pattern(抽象工厂模式) 类图。\n\n1. 创建抽象类 AbstractFactory\n2. 创建具体工厂类 ColourFactory，继承 AbstractFactory\n3. 创建接口 Colour，定义颜色行为\n4. 创建具体颜色类 Red、Green、Blue，实现 Colour 接口\n   Red、Green、Blue 为 RGB 三原色\n5. AbstractFactory 通过 ColourFactory 调用 getColour() 方法\n6. Colour 接口定义 setColour() 方法\n7. 保存为 115.mdj',
+                    mermaid: `classDiagram
+    class AbstractFactory {
+        <<abstract>>
+        +getColour() Colour
+    }
+    class ColourFactory {
+        +getColour() Colour
+    }
+    class Colour {
+        <<interface>>
+        +setColour()
+        +getRGB() String
+    }
+    class Red {
+        +setColour()
+        +getRGB() String
+    }
+    class Green {
+        +setColour()
+        +getRGB() String
+    }
+    class Blue {
+        +setColour()
+        +getRGB() String
+    }
+    AbstractFactory <|-- ColourFactory : extends
+    Colour <|.. Red : implements
+    Colour <|.. Green : implements
+    Colour <|.. Blue : implements
+    ColourFactory --> Colour : creates`
+                }
+            ]
+        },
+        '1.2': {
+            title: '1.2 UML 高级应用 (5题)',
+            questions: [
+                {
+                    id: '1.2.1',
+                    title: '活动图 - 循环求和算法',
+                    req: '【题目要求】\n使用 StarUML 创建活动图(Activity Diagram)，描述以下算法：\n\nS = 0\ni = 1\nWhile i <= 5\n    S = S + i\n    i = i + 1\nEnd While\nPrint S\n\n要求：\n1. 创建流程图，包含起始和结束节点\n2. 用 Process 节点表示 S=S+i 和 i=i+1\n3. 标注 SS+i 和 ii+1 的赋值操作\n4. 包含判断节点和循环结构\n5. 保存为 121.mdj',
+                    mermaid: `flowchart TD
+    Start([开始]) --> InitS[S = 0]
+    InitS --> InitI[i = 1]
+    InitI --> Condition{i <= 5?}
+    Condition -->|Yes| AddS[S = S + i]
+    AddS --> IncI[i = i + 1]
+    IncI --> Condition
+    Condition -->|No| PrintS[Print S]
+    PrintS --> EndNode([结束])`
+                },
+                {
+                    id: '1.2.2',
+                    title: '活动图 - 闰年判断算法',
+                    req: '【题目要求】\n使用 StarUML 创建活动图(Activity Diagram)，描述闰年判断算法：\n\n输入年份 year\n如果 year % 4 == 0：\n    如果 year % 100 == 0：\n        如果 year % 400 == 0：输出"闰年"\n        否则：输出"不是闰年"\n    否则：输出"闰年"\n否则：输出"不是闰年"\n\n要求：\n1. 创建流程图\n2. 标注 year%4、year%100、year%400 三个判断节点\n3. 包含输入和输出节点\n4. 保存为 122.mdj',
+                    mermaid: `flowchart TD
+    Start([开始]) --> Input[输入年份 year]
+    Input --> Cond1{year % 4 == 0?}
+    Cond1 -->|No| NotLeap1[输出: 不是闰年]
+    Cond1 -->|Yes| Cond2{year % 100 == 0?}
+    Cond2 -->|No| IsLeap[输出: 闰年]
+    Cond2 -->|Yes| Cond3{year % 400 == 0?}
+    Cond3 -->|Yes| IsLeap2[输出: 闰年]
+    Cond3 -->|No| NotLeap2[输出: 不是闰年]
+    NotLeap1 --> EndNode([结束])
+    IsLeap --> EndNode
+    IsLeap2 --> EndNode
+    NotLeap2 --> EndNode`
+                },
+                {
+                    id: '1.2.3',
+                    title: 'E-R 图 - 学生选课管理系统',
+                    req: '【题目要求】\n使用 StarUML 创建 E-R 图，描述学生选课管理系统。\n\n系统说明：\n- 学生可以选修多门课程\n- 每门课程可以被多名学生选修\n- 教师可以教授多门课程\n- 每门课程由一名教师教授\n\n要求：\n1. 使用 UML 符号绘制 E-R 图\n2. 标注实体和关系\n3. 添加主要属性\n4. 保存为 123.mdj',
+                    mermaid: `erDiagram
+    Student {
+        string StudentID
+        string Name
+        int Age
+        string Grade
+    }
+    Course {
+        string CourseID
+        string CourseName
+        int Credits
+    }
+    Teacher {
+        string TeacherID
+        string Name
+        string Department
+    }
+    Student ||--o{ Enrollment : "selects"
+    Enrollment }o--|| Course : "for"
+    Teacher ||--o{ Course : "teaches"`
+                },
+                {
+                    id: '1.2.4',
+                    title: 'E-R 图 - 图书馆借阅系统',
+                    req: '【题目要求】\n使用 StarUML 创建 E-R 图，描述图书馆借阅管理系统。\n\n系统说明：\n读者(Reader)可以借阅(Borrow)多本图书(Book)\n每本图书属于一个分类(Category)\n每个出版社(Publisher)可以出版多本图书\n图书有书号、书名、作者等属性\n读者有读者号、姓名、电话等属性\n\n要求：\n1. 使用 UML 符号绘制 E-R 图\n2. 标注所有实体、属性和关系\n3. 标注关系类型(1:1, 1:N, M:N)\n4. 保存为 124.mdj',
+                    mermaid: `erDiagram
+    Reader {
+        string ReaderID
+        string Name
+        string Phone
+        string Email
+    }
+    Book {
+        string BookID
+        string Title
+        string Author
+        date PublishDate
+    }
+    Category {
+        string CategoryID
+        string CategoryName
+    }
+    Publisher {
+        string PublisherID
+        string PublisherName
+        string Address
+    }
+    Reader ||--o{ Borrow : "borrows"
+    Borrow }o--|| Book : "for"
+    Book }o--|| Category : "belongs to"
+    Publisher ||--o{ Book : "publishes"`
+                },
+                {
+                    id: '1.2.5',
+                    title: '用例图 - 在线购物系统',
+                    req: '【题目要求】\n使用 StarUML 创建 UML 用例图(Use Case Diagram)。\n\n系统描述：\n在线购物系统包含以下参与者(Actor)和用例(Use Case)：\n\n参与者：Customer(顾客)、Admin(管理员)、PaymentSystem(支付系统)\n\n用例：BrowseProducts(浏览商品)、AddToCart(加入购物车)、PlaceOrder(下单)\nMakePayment(支付)、ManageProducts(管理商品)、ProcessRefund(处理退款)\n\n关系：\n- Customer 参与 BrowseProducts, AddToCart, PlaceOrder, MakePayment\n- Admin 参与 ManageProducts, ProcessRefund\n- PaymentSystem 参与 MakePayment\n- PlaceOrder Include MakePayment\n- ProcessRefund Extend MakePayment\n\n要求：\n1. 创建 UML 用例图\n2. 包含 Actor, Use Case, Include, Association\n3. 保存为 125.mdj',
+                    mermaid: `graph LR
+    Customer((Customer)) --> BrowseProducts[BrowseProducts]
+    Customer --> AddToCart[AddToCart]
+    Customer --> PlaceOrder[PlaceOrder]
+    Customer --> MakePayment[MakePayment]
+    Admin((Admin)) --> ManageProducts[ManageProducts]
+    Admin --> ProcessRefund[ProcessRefund]
+    PaymentSystem((PaymentSystem)) --> MakePayment
+    PlaceOrder -.->|include| MakePayment
+    ProcessRefund -.->|extend| MakePayment
+
+    style Customer fill:#e3f2fd,stroke:#1565c0
+    style Admin fill:#e3f2fd,stroke:#1565c0
+    style PaymentSystem fill:#fce4ec,stroke:#c62828
+    style BrowseProducts fill:#fff,stroke:#333
+    style AddToCart fill:#fff,stroke:#333
+    style PlaceOrder fill:#fff,stroke:#333
+    style MakePayment fill:#fff,stroke:#333
+    style ManageProducts fill:#fff,stroke:#333
+    style ProcessRefund fill:#fff,stroke:#333`
+                }
+            ]
+        }
+    };
+
+    function renderUmlList() {
+        let html = '';
+        Object.keys(umlData).forEach(groupKey => {
+            const group = umlData[groupKey];
+            html += '<div class="uml-group-card"><div class="uml-group-title">' + group.title + '</div>';
+            group.questions.forEach((q, idx) => {
+                html += '<div class="uml-question-card" onclick="showUmlQuestion(\'' + groupKey + '\',' + idx + ')"><div class="uml-q-title">' + q.id + ' - ' + q.title + '</div></div>';
+            });
+            html += '</div>';
+        });
+        document.getElementById('uml-list').innerHTML = html;
+    }
+
+    let currentUmlGroup = '';
+    let currentUmlIdx = 0;
+
+    function showUmlQuestion(groupKey, idx) {
+        currentUmlGroup = groupKey;
+        currentUmlIdx = idx;
+        const q = umlData[groupKey].questions[idx];
+        document.getElementById('uml-list-view').style.display = 'none';
+        document.getElementById('uml-detail-view').classList.add('active');
+        document.getElementById('uml-detail-title').innerText = q.id + ' - ' + q.title;
+        document.getElementById('uml-requirements').innerHTML = '<strong>📋 题目要求：</strong><br><br>' + q.req.replace(/\\n/g, '<br>');
+        document.getElementById('uml-mermaid-diagram').textContent = q.mermaid;
+        document.getElementById('uml-diagram-box').style.display = 'none';
+        document.getElementById('uml-toggle-btn').innerText = '👁 查看 UML 图答案';
+        document.getElementById('uml-toggle-btn').classList.remove('showing');
+        window.scrollTo(0, 0);
+    }
+
+    async function toggleUmlAnswer() {
+        const box = document.getElementById('uml-diagram-box');
+        const btn = document.getElementById('uml-toggle-btn');
+        if (box.style.display === 'block') {
+            box.style.display = 'none';
+            btn.innerText = '👁 查看 UML 图答案';
+            btn.classList.remove('showing');
+        } else {
+            box.style.display = 'block';
+            btn.innerText = '🙈 隐藏 UML 图答案';
+            btn.classList.add('showing');
+            // Re-render mermaid
+            try {
+                await mermaid.run({ querySelector: '#uml-mermaid-diagram' });
+            } catch(e) {
+                document.getElementById('uml-mermaid-diagram').innerHTML = '<p style="color:red;">Mermaid 渲染失败: ' + e.message + '</p>';
+            }
+            window.scrollTo(0, box.getBoundingClientRect().top + window.scrollY - 100);
+        }
+    }
+
+    function backToUmlList() {
+        document.getElementById('uml-detail-view').classList.remove('active');
+        document.getElementById('uml-list-view').style.display = '';
         window.scrollTo(0, 0);
     }
 
