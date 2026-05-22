@@ -99,8 +99,8 @@
             <button class="sync-btn btn-export" onclick="exportData()">📤 导出存档</button>
             <button class="sync-btn btn-import" onclick="document.getElementById('file-input').click()">📥 导入存档</button>
             <input type="file" id="file-input" style="display:none" onchange="uploadProgress(this)">
-			<button class="sync-btn" style="background-color: #27ae60; color: white;" onclick="copyData()" title="复制存档代码">📋 复制存档</button>
-			<button class="sync-btn" style="background-color: #f39c12; color: white;" onclick="importFromText()" title="粘贴存档代码">📝 粘贴导入</button>
+            <button class="sync-btn" style="background-color: #27ae60; color: white;" onclick="copyData()" title="复制存档代码">📋 复制存档</button>
+            <button class="sync-btn" style="background-color: #f39c12; color: white;" onclick="importFromText()" title="粘贴存档代码">📝 粘贴导入</button>
         </div>
 
         <select id="mode-select" class="mode-select" onchange="renderHome()">
@@ -119,7 +119,7 @@
     <div class="quiz-header">
         <button class="back-btn" onclick="goHome()">⬅ 返回目录</button>
         <div class="quiz-title" id="current-quiz-title"></div>
-        <div style="width: 70px;"></div>
+        <button class="back-btn" style="background:#3498db; color:white; border:none;" onclick="enterFullPageView()">📜 整页背题</button>
     </div>
 
     <div id="quiz-container" class="card">
@@ -134,6 +134,15 @@
     </div>
 
     <div class="status-bar" id="status-bar"></div>
+</div>
+
+<div id="full-page-view" class="view">
+    <div class="quiz-header" style="position: sticky; top: 0; z-index: 100; background: inherit; padding: 10px 0; border-bottom: 1px solid #ecf0f1;">
+        <button class="back-btn" onclick="exitFullPageView()">⬅ 返回答题</button>
+        <div class="quiz-title" id="full-page-title">整页背题模式</div>
+        <button class="back-btn" onclick="goHomeFromFullPage()">🏠 主页</button>
+    </div>
+    <div id="full-page-content" style="margin-top: 20px;"></div>
 </div>
 
 <script>
@@ -318,63 +327,104 @@
         hasAnswered = true;
 
         const options = document.querySelectorAll('.option');
-
-        // 标记正确答案
         options[correctIndex].classList.add('correct');
 
-        // 加入错题本（和答错一样处理）
         if (currentMode === 'normal' && !wrongBook.includes(qId)) {
             wrongBook.push(qId);
             saveWrongBook();
         }
-
-        // 显示下一题按钮
         document.getElementById('next-btn').style.display = 'block';
     }
-	// 手机端专用：复制存档代码到剪贴板
-	function copyData() {
-		const allData = { wrongBook, chapterProgress, timestamp: new Date().getTime() };
-		const str = JSON.stringify(allData);
-		
-		// 兼容手机端的复制方法
-		const textArea = document.createElement("textarea");
-		textArea.value = str;
-		textArea.style.position = "fixed";  // 避免屏幕滚动
-		textArea.style.opacity = "0";
-		document.body.appendChild(textArea);
-		textArea.focus();
-		textArea.select();
-		
-		try {
-			document.execCommand('copy');
-			alert("✅ 存档代码已成功复制！\n您可以将其粘贴保存到微信文件传输助手或备忘录中。");
-		} catch (err) {
-			alert("❌ 复制失败，请尝试使用下载功能。");
-		}
-		document.body.removeChild(textArea);
-	}
 
-// 手机端专用：通过粘贴文本导入存档
-	function importFromText() {
-		const str = prompt("请在下方输入框内粘贴您的存档代码：");
-		if (!str) return; // 用户取消或未输入
-		
-		try {
-			const data = JSON.parse(str);
-			if (data.wrongBook && data.chapterProgress) {
-				wrongBook = data.wrongBook;
-				chapterProgress = data.chapterProgress;
-				saveWrongBook();
-				localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
-				alert("🎉 存档导入成功！");
-				location.reload();
-			} else {
-				alert("❌ 导入失败：存档格式不正确，请确保复制了完整的代码。");
-			}
-		} catch(e) {
-			alert("❌ 导入失败：无法解析代码，请检查是否包含多余字符。");
-		}
-	}
+    // 手机端专用：复制存档代码到剪贴板
+    function copyData() {
+        const allData = { wrongBook, chapterProgress, timestamp: new Date().getTime() };
+        const str = JSON.stringify(allData);
+        
+        const textArea = document.createElement("textarea");
+        textArea.value = str;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        try {
+            document.execCommand('copy');
+            alert("✅ 存档代码已成功复制！\n您可以将其粘贴保存到微信文件传输助手或备忘录中。");
+        } catch (err) {
+            alert("❌ 复制失败，请尝试使用下载功能。");
+        }
+        document.body.removeChild(textArea);
+    }
+
+    // 手机端专用：通过粘贴文本导入存档
+    function importFromText() {
+        const str = prompt("请在下方输入框内粘贴您的存档代码：");
+        if (!str) return; 
+        
+        try {
+            const data = JSON.parse(str);
+            if (data.wrongBook && data.chapterProgress) {
+                wrongBook = data.wrongBook;
+                chapterProgress = data.chapterProgress;
+                saveWrongBook();
+                localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
+                alert("🎉 存档导入成功！");
+                location.reload();
+            } else {
+                alert("❌ 导入失败：存档格式不正确，请确保复制了完整的代码。");
+            }
+        } catch(e) {
+            alert("❌ 导入失败：无法解析代码，请检查是否包含多余字符。");
+        }
+    }
+
+    // ======== 📜 整页浏览模式功能 ========
+    function enterFullPageView() {
+        if (currentList.length === 0) {
+            alert("当前列表没有题目哦！");
+            return;
+        }
+        
+        document.getElementById('quiz-view').classList.remove('active');
+        document.getElementById('full-page-view').classList.add('active');
+        
+        // 动态设置标题
+        let baseTitle = document.getElementById('current-quiz-title').innerText;
+        document.getElementById('full-page-title').innerText = baseTitle + ' - 背题模式';
+
+        let html = '';
+        currentList.forEach((q, idx) => {
+            html += `<div class="card" style="margin-bottom: 25px;">`;
+            html += `<span class="tag">${q.chapter} | 全局第 ${q.id} 题</span>`;
+            html += `<div class="question-text">${idx + 1}. ${q.question}</div>`;
+            
+            q.options.forEach((opt, oIdx) => {
+                let isCorrect = (oIdx === q.answer);
+                let optClass = isCorrect ? 'option correct' : 'option';
+                // 错误选项降低透明度，正确选项加粗，且均不可点击
+                let optStyle = isCorrect ? 'font-weight:bold; cursor:default;' : 'opacity:0.5; cursor:default;';
+                html += `<div class="${optClass}" style="${optStyle}">${String.fromCharCode(65 + oIdx)}. ${opt}</div>`;
+            });
+            
+            html += `</div>`;
+        });
+        
+        document.getElementById('full-page-content').innerHTML = html;
+        window.scrollTo(0, 0); // 切换后回到顶部
+    }
+
+    function exitFullPageView() {
+        document.getElementById('full-page-view').classList.remove('active');
+        document.getElementById('quiz-view').classList.add('active');
+    }
+
+    function goHomeFromFullPage() {
+        document.getElementById('full-page-view').classList.remove('active');
+        document.getElementById('home-view').classList.add('active');
+        renderHome();
+    }
 </script>
 </body>
 </html>
