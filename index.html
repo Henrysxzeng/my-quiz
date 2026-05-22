@@ -195,10 +195,34 @@
     .sql-knowledge-group .kg-questions { font-size: 13px; color: #7f8c8d; line-height: 1.8; }
     body.eye-care .sql-knowledge-group { background: #24292e; border-color: #444c56; }
     body.eye-care .sql-knowledge-group .kg-name { color: #e1e4e8; }
+
+    /* ======== 🔄 跨设备同步条 ======== */
+    .sync-bar { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: white; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); font-size: 13px; flex-wrap: wrap; transition: all 0.3s; }
+    .sync-bar .sync-status { color: #7f8c8d; white-space: nowrap; }
+    .sync-bar .sync-status.synced { color: #27ae60; }
+    .sync-bar input { padding: 5px 10px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; width: 120px; outline: none; }
+    .sync-bar input:focus { border-color: #3498db; }
+    .sync-bar .sync-small-btn { padding: 5px 10px; border: none; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; }
+    .sync-bar .sync-small-btn.enable { background: #3498db; color: white; }
+    .sync-bar .sync-small-btn.enable:hover { background: #2980b9; }
+    .sync-bar .sync-small-btn.disable { background: #e74c3c; color: white; }
+    .sync-bar .sync-small-btn.disable:hover { background: #c0392b; }
+    .sync-bar .sync-small-btn.pull { background: #27ae60; color: white; }
+    .sync-bar .sync-small-btn.pull:hover { background: #219a52; }
+    body.eye-care .sync-bar { background: #24292e; color: #e1e4e8; }
+    body.eye-care .sync-bar input { background: #2f363d; color: #e1e4e8; border-color: #444c56; }
 </style>
 <script src="data.js"></script> 
 </head>
 <body>
+
+<div class="sync-bar" id="sync-bar">
+    <span class="sync-status" id="sync-status">🔄 未启用同步</span>
+    <input type="text" id="sync-code-input" placeholder="输入同步码" style="display:none;">
+    <button class="sync-small-btn enable" id="sync-enable-btn" onclick="enableSync()">启用</button>
+    <button class="sync-small-btn pull" id="sync-pull-btn" onclick="syncPull()" style="display:none;">📥 拉取</button>
+    <button class="sync-small-btn disable" id="sync-disable-btn" onclick="disableSync()" style="display:none;">断开</button>
+</div>
 
 <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchMode('choice')">📝 选择题</button>
@@ -339,17 +363,19 @@
     };
 
     window.onload = () => {
-        // 读取本地存储的护眼模式状态
         if (localStorage.getItem('eyeCareMode') === 'true') {
             document.body.classList.add('eye-care');
             document.getElementById('theme-toggle').innerText = '☀️';
         }
 
+        initSyncUI();
+        if (syncId) { syncPull().then(() => renderHome()); }
+        else { renderHome(); }
+
         if(typeof allQuestions === 'undefined') {
             document.body.innerHTML = "<h2 style='text-align:center;color:red;margin-top:50px;'>未检测到题库 data.js！</h2>";
             return;
         }
-        renderHome();
     };
 
     // 切换护眼模式
@@ -360,11 +386,12 @@
         document.getElementById('theme-toggle').innerText = isDark ? '☀️' : '🌙';
     }
 
-    function saveWrongBook() { localStorage.setItem('myWrongBook', JSON.stringify(wrongBook)); }
-    
+    function saveWrongBook() { localStorage.setItem('myWrongBook', JSON.stringify(wrongBook)); autoSync(); }
+
     function saveProgress() {
         chapterProgress[`${currentChapter}_${currentMode}`] = { index: currentIndex, order: currentList.map(q => q.id) };
         localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress));
+        autoSync();
     }
 
     // 导出 JSON 文件
@@ -694,7 +721,114 @@
     // ======== 🤖 AI 批改 ========
     let sqlErrors = JSON.parse(localStorage.getItem('sqlErrors')) || [];
 
-    function saveSqlErrors() { localStorage.setItem('sqlErrors', JSON.stringify(sqlErrors)); }
+    // ======== 🔄 跨设备同步 ========
+    let syncId = localStorage.getItem('syncId') || '';
+    let syncTimer = null;
+
+    function initSyncUI() {
+        const statusEl = document.getElementById('sync-status');
+        const inputEl = document.getElementById('sync-code-input');
+        const enableBtn = document.getElementById('sync-enable-btn');
+        const pullBtn = document.getElementById('sync-pull-btn');
+        const disableBtn = document.getElementById('sync-disable-btn');
+
+        if (syncId) {
+            statusEl.innerText = '🟢 已同步';
+            statusEl.className = 'sync-status synced';
+            inputEl.style.display = 'none';
+            enableBtn.style.display = 'none';
+            pullBtn.style.display = '';
+            disableBtn.style.display = '';
+        } else {
+            statusEl.innerText = '🔄 未启用同步';
+            statusEl.className = 'sync-status';
+            inputEl.style.display = '';
+            enableBtn.style.display = '';
+            pullBtn.style.display = 'none';
+            disableBtn.style.display = 'none';
+        }
+    }
+
+    async function enableSync() {
+        const code = document.getElementById('sync-code-input').value.trim();
+        if (!code) { alert('请输入一个同步码（用于多设备共享数据）'); return; }
+        if (code.length < 3) { alert('同步码至少 3 个字符'); return; }
+
+        syncId = code;
+        localStorage.setItem('syncId', syncId);
+        initSyncUI();
+
+        // First pull from cloud
+        await syncPull();
+
+        // Then push local data
+        await syncPush();
+        document.getElementById('sync-status').innerText = '🟢 已同步';
+        document.getElementById('sync-status').className = 'sync-status synced';
+    }
+
+    function disableSync() {
+        if (!confirm('确定要断开同步吗？本地数据不会丢失。')) return;
+        syncId = '';
+        localStorage.removeItem('syncId');
+        initSyncUI();
+    }
+
+    function getSyncData() {
+        return {
+            wrongBook: wrongBook,
+            chapterProgress: chapterProgress,
+            sqlErrors: sqlErrors,
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    async function syncPush() {
+        if (!syncId) return;
+        try {
+            const data = getSyncData();
+            await fetch('/api/sync', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ syncId: syncId, data: data })
+            });
+            localStorage.setItem('syncLastTime', new Date().toISOString());
+        } catch (e) {
+            console.log('Sync push failed:', e.message);
+        }
+    }
+
+    async function syncPull() {
+        if (!syncId) return;
+        try {
+            const resp = await fetch('/api/sync?syncId=' + encodeURIComponent(syncId));
+            if (!resp.ok) return;
+            const json = await resp.json();
+            if (!json.data) return;
+
+            const cloud = json.data;
+            const cloudTime = new Date(cloud.timestamp || 0).getTime();
+            const localTime = new Date(localStorage.getItem('syncLastTime') || 0).getTime();
+
+            // Merge: cloud wins only if newer
+            if (cloudTime > localTime) {
+                if (cloud.wrongBook) { wrongBook = cloud.wrongBook; saveWrongBook(); }
+                if (cloud.chapterProgress) { chapterProgress = cloud.chapterProgress; localStorage.setItem('myChapterProgress', JSON.stringify(chapterProgress)); }
+                if (cloud.sqlErrors) { sqlErrors = cloud.sqlErrors; localStorage.setItem('sqlErrors', JSON.stringify(sqlErrors)); }
+                localStorage.setItem('syncLastTime', cloud.timestamp);
+            }
+        } catch (e) {
+            console.log('Sync pull failed:', e.message);
+        }
+    }
+
+    function autoSync() {
+        if (!syncId) return;
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(() => syncPush(), 2000);
+    }
+
+    function saveSqlErrors() { localStorage.setItem('sqlErrors', JSON.stringify(sqlErrors)); autoSync(); }
 
     function renderExtraCards() {
         const container = document.getElementById('sql-extra-cards');
